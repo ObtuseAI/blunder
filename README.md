@@ -24,6 +24,24 @@ The important part is not that a model can write code. The important part is tha
 > Models may propose. Tools may measure. Evidence may narrow a decision.<br>
 > None of them can silently grant themselves integration, release, credential, or constitutional authority.
 
+## Product truth
+
+| Contract | Current public state |
+| --- | --- |
+| **Portfolio role** | **Evidence-Bound Engineering Control Plane** — the company-level system for isolated agent missions, deterministic validation, and operator-owned integration. |
+| **Maturity** | **Technical preview** |
+| **Engineering evidence baseline** | [`04576053`](https://github.com/ObtuseAI/blunder/commit/04576053a2efe14bda56dd468f87049ccce3f327) · required cross-platform [quality workflow](https://github.com/ObtuseAI/blunder/actions/workflows/quality.yml) |
+| **Proved now** | The public source implements repository intelligence, bounded planning, isolated worktrees, mission budgets, validation records, review, recovery, and patch-only handoff. |
+| **Authority ceiling** | Blunder never auto-merges. The operator owns integration, release, credentials, provider spending, and changes to governing policy. |
+| **Clean demonstration** | Follow the [core-service quick start](#core-service), then inspect the mission and validation surfaces without granting integration authority. |
+| **Known limit** | A current public provider-backed API-to-desktop mission reaching reviewed handoff remains an open flagship proof; configured CI does not substitute for that end-to-end demonstration. |
+
+**Designed for:** engineering leaders and product teams who need agentic speed without surrendering scope control, review quality, recovery, or source authority.
+
+[Explore the ObtuseAI portfolio](https://github.com/ObtuseAI) ·
+[Inspect the architecture](#why-this-system-exists) ·
+[Start a technical conversation](https://github.com/ObtuseAI/blunder/issues)
+
 ## Blunder in one minute
 
 | Question | Answer |
@@ -273,7 +291,7 @@ python -m venv .venv
 .\.venv\Scripts\python.exe -m pip install --upgrade pip
 .\.venv\Scripts\python.exe -m pip install -e .
 .\.venv\Scripts\python.exe -m unittest discover -s tests
-.\.venv\Scripts\blunder-core.exe
+.\.venv\Scripts\blunder-core.exe --root .
 ```
 
 The core service binds to loopback. Keep the generated token private and use the native host or documented contracts instead of exposing the service to a network.
