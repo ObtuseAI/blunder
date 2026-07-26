@@ -1,0 +1,237 @@
+{
+  "schema": "obtuse.blunder.capability-plugin.v1",
+  "id": "product",
+  "name": "Blunder Product Craft",
+  "version": "3.0.0",
+  "description": "First-party product studio for mobile apps, websites, UI/UX systems, games, assets, and cross-platform proof.",
+  "firstParty": true,
+  "enabled": true,
+  "tools": [
+    {
+      "id": "experience-context",
+      "name": "Experience Context",
+      "description": "Find interface, documentation, and workflow evidence in first-party source.",
+      "permissions": ["source:read", "source:search"],
+      "actionId": null,
+      "mutatesSource": false,
+      "providerRequired": false
+    },
+    {
+      "id": "product-proof",
+      "name": "Product Proof Gate",
+      "description": "Check that a product change has a concrete user outcome and validation path.",
+      "permissions": ["artifact:read", "artifact:write", "queue:read"],
+      "actionId": "planning_gate",
+      "mutatesSource": false,
+      "providerRequired": false
+    },
+    {
+      "id": "experience-validation",
+      "name": "Experience Validation",
+      "description": "Run integration proof for interface and workflow changes.",
+      "permissions": ["source:read", "tests:run"],
+      "actionId": "tests",
+      "mutatesSource": false,
+      "providerRequired": false
+    },
+    {
+      "id": "branch-crafter",
+      "name": "Isolated Product Crafter",
+      "description": "Craft one cohesive interface or documentation change inside a separate Git worktree.",
+      "permissions": ["source:read", "source:search", "source:write-bounded", "provider:bounded", "tests:run"],
+      "actionId": null,
+      "mutatesSource": true,
+      "providerRequired": true
+    },
+    {
+      "id": "app-blueprint",
+      "name": "App Blueprint Compiler",
+      "description": "Compile product intent into typed journeys, surfaces, states, data decisions, quality budgets, and authority boundaries.",
+      "permissions": ["artifact:read", "artifact:write"],
+      "actionId": null,
+      "mutatesSource": false,
+      "providerRequired": false
+    },
+    {
+      "id": "visual-judgment",
+      "name": "Visual Judgment Loop",
+      "description": "Compare first-party PNG evidence and layout telemetry with explicit pixel, clipping, focus, and console budgets.",
+      "permissions": ["artifact:read", "artifact:write"],
+      "actionId": null,
+      "mutatesSource": false,
+      "providerRequired": false
+    },
+    {
+      "id": "device-matrix",
+      "name": "Device Matrix",
+      "description": "Specify and evaluate deterministic desktop, tablet, phone, accessibility, offline, locale, and theme profiles.",
+      "permissions": ["artifact:read", "artifact:write", "tests:run"],
+      "actionId": null,
+      "mutatesSource": false,
+      "providerRequired": false
+    },
+    {
+      "id": "mobile-foundry",
+      "name": "Mobile App Foundry",
+      "description": "Inspect Expo, React Native, Flutter, Android, and iOS projects with device, identity, credential, and build proof contracts.",
+      "permissions": ["source:read", "source:search", "tests:run"],
+      "actionId": null,
+      "mutatesSource": false,
+      "providerRequired": false
+    },
+    {
+      "id": "web-production-lab",
+      "name": "Web Production Lab",
+      "description": "Inspect routes, metadata, accessibility, responsiveness, security, tests, builds, and Core Web Vitals budgets.",
+      "permissions": ["source:read", "source:search", "tests:run"],
+      "actionId": null,
+      "mutatesSource": false,
+      "providerRequired": false
+    },
+    {
+      "id": "game-studio",
+      "name": "Game Studio",
+      "description": "Inspect Godot, Unity, Unreal, and web games for scenes, inputs, replay, frame budgets, headless tests, and exports.",
+      "permissions": ["source:read", "source:search", "tests:run"],
+      "actionId": null,
+      "mutatesSource": false,
+      "providerRequired": false
+    },
+    {
+      "id": "design-system-forge",
+      "name": "Design-System Forge",
+      "description": "Compile accessible colors, typography, spacing, radius, motion, breakpoints, states, and CSS variables.",
+      "permissions": ["artifact:read", "artifact:write"],
+      "actionId": null,
+      "mutatesSource": false,
+      "providerRequired": false
+    },
+    {
+      "id": "asset-intelligence",
+      "name": "Asset Intelligence",
+      "description": "Audit images, SVG, audio, fonts, models, hashes, provenance, licenses, duplicates, and runtime budgets.",
+      "permissions": ["source:read", "artifact:read"],
+      "actionId": null,
+      "mutatesSource": false,
+      "providerRequired": false
+    },
+    {
+      "id": "polyglot-product-intelligence",
+      "name": "Polyglot Product Intelligence",
+      "description": "Index and diagnose TypeScript, JavaScript, CSS, Swift, Kotlin, Dart, C#, GDScript, shaders, and component markup.",
+      "permissions": ["source:read", "source:search"],
+      "actionId": null,
+      "mutatesSource": false,
+      "providerRequired": false
+    },
+    {
+      "id": "product-arena",
+      "name": "Product Evaluation Arena",
+      "description": "Score complete product candidates across visual, device, platform, assets, language, accessibility, performance, intervention, time, and cost proof.",
+      "permissions": ["artifact:read", "artifact:write"],
+      "actionId": null,
+      "mutatesSource": false,
+      "providerRequired": false
+    }
+  ],
+  "skills": [
+    {
+      "id": "interface-craft",
+      "name": "Interface Craft",
+      "description": "Turn complex agent state into a calm, discoverable, keyboard-friendly interface.",
+      "triggers": ["interface", "ui", "ux", "ide", "visual", "accessible", "workflow"],
+      "workflow": ["Define the user decision", "Remove nonessential state", "Design the interaction hierarchy", "Expose proof near action", "Validate keyboard and responsive behavior"],
+      "tools": ["experience-context", "product-proof", "experience-validation", "branch-crafter"],
+      "contextMode": "on-demand",
+      "sideEffects": true
+    },
+    {
+      "id": "technical-writing",
+      "name": "Technical Writing",
+      "description": "Produce concise answer-first documentation grounded in current source behavior.",
+      "triggers": ["document", "readme", "explain", "report", "guide", "write"],
+      "workflow": ["Identify the audience", "Read current behavior", "Lead with the outcome", "Keep commands executable", "Remove duplicated claims"],
+      "tools": ["experience-context", "experience-validation", "branch-crafter"],
+      "contextMode": "on-demand",
+      "sideEffects": true
+    },
+    {
+      "id": "radical-simplification",
+      "name": "Radical Simplification",
+      "description": "Reduce concepts, modes, and moving parts while preserving capability and proof.",
+      "triggers": ["simplify", "clean", "cohesive", "polish", "remove", "minimal"],
+      "workflow": ["Name the essential outcome", "Find duplicated concepts", "Collapse equivalent paths", "Preserve hard boundaries", "Verify capability did not regress"],
+      "tools": ["experience-context", "product-proof", "experience-validation", "branch-crafter"],
+      "contextMode": "isolated",
+      "sideEffects": true
+    },
+    {
+      "id": "mobile-product-engineering",
+      "name": "Mobile Product Engineering",
+      "description": "Build device-native journeys with offline, permission, accessibility, performance, preview-build, and release proof.",
+      "triggers": ["mobile", "ios", "android", "expo", "react native", "flutter", "app store"],
+      "workflow": ["Compile the app blueprint", "Forge the design system", "Implement in an isolated branch", "Run device and visual proof", "Prepare a gated preview build"],
+      "tools": ["app-blueprint", "design-system-forge", "mobile-foundry", "device-matrix", "visual-judgment", "branch-crafter"],
+      "contextMode": "isolated",
+      "sideEffects": true
+    },
+    {
+      "id": "web-product-engineering",
+      "name": "Web Product Engineering",
+      "description": "Build accessible responsive production websites with semantic, security, performance, and browser proof.",
+      "triggers": ["website", "web app", "landing page", "dashboard", "nextjs", "frontend", "responsive"],
+      "workflow": ["Compile journeys and routes", "Forge responsive tokens", "Implement in isolation", "Run browser and visual matrices", "Prove production and Web Vitals gates"],
+      "tools": ["app-blueprint", "design-system-forge", "web-production-lab", "device-matrix", "visual-judgment", "branch-crafter"],
+      "contextMode": "isolated",
+      "sideEffects": true
+    },
+    {
+      "id": "game-product-engineering",
+      "name": "Game Product Engineering",
+      "description": "Build deterministic playable loops with scene, input, replay, asset, frame-time, and export proof.",
+      "triggers": ["game", "godot", "unity", "unreal", "level", "gameplay", "shader"],
+      "workflow": ["Compile the playable loop", "Map scenes and assets", "Implement in isolation", "Run deterministic replay and frame proof", "Prepare gated exports"],
+      "tools": ["app-blueprint", "game-studio", "asset-intelligence", "polyglot-product-intelligence", "visual-judgment", "branch-crafter"],
+      "contextMode": "isolated",
+      "sideEffects": true
+    },
+    {
+      "id": "design-system-engineering",
+      "name": "Design-System Engineering",
+      "description": "Create cohesive accessible component systems whose tokens and complete states survive visual and device proof.",
+      "triggers": ["design system", "component library", "tokens", "typography", "theme", "brand"],
+      "workflow": ["Define experience principles", "Compile tokens and contrast", "Enumerate component states", "Run visual and device proof", "Measure cross-product adoption"],
+      "tools": ["design-system-forge", "visual-judgment", "device-matrix", "asset-intelligence", "experience-validation"],
+      "contextMode": "on-demand",
+      "sideEffects": true
+    },
+    {
+      "id": "visual-quality-engineering",
+      "name": "Visual Quality Engineering",
+      "description": "Judge rendered products through deterministic pixel, layout, accessibility, responsive, and interaction evidence.",
+      "triggers": ["visual regression", "screenshot", "pixel", "clipping", "overflow", "accessibility", "device matrix"],
+      "workflow": ["Declare visual scenarios", "Capture content-addressed evidence", "Evaluate pixels and layout", "Inspect accessibility states", "Reject unapproved drift"],
+      "tools": ["visual-judgment", "device-matrix", "design-system-forge", "product-arena"],
+      "contextMode": "isolated",
+      "sideEffects": false
+    },
+    {
+      "id": "product-arena-evaluation",
+      "name": "Product Arena Evaluation",
+      "description": "Evaluate complete mobile, web, game, and cross-platform outcomes without fabricated baselines or aesthetic pass language.",
+      "triggers": ["product benchmark", "product evaluation", "golden app", "compare apps", "usability score"],
+      "workflow": ["Load the versioned case", "Collect every required report", "Measure journeys and performance", "Detect false accepts", "Publish provenance-bound results"],
+      "tools": ["product-arena", "visual-judgment", "device-matrix", "mobile-foundry", "web-production-lab", "game-studio"],
+      "contextMode": "isolated",
+      "sideEffects": false
+    }
+  ],
+  "hooks": [
+    {
+      "id": "product-mission-journal",
+      "event": "mission.completed",
+      "action": "audit.record",
+      "description": "Record completed product proof actions in the capability event journal."
+    }
+  ]
+}

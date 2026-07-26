@@ -1,0 +1,87 @@
+{
+  "schema": "obtuse.blunder.capability-plugin.v1",
+  "id": "research",
+  "name": "Blunder Research and Discovery",
+  "version": "2.0.0",
+  "description": "Provenance-first research, contradiction discovery, and falsifiable hypothesis workflows.",
+  "firstParty": true,
+  "enabled": true,
+  "tools": [
+    {
+      "id": "evidence-search",
+      "name": "Evidence Search",
+      "description": "Search first-party source and proof paths without changing state.",
+      "permissions": ["source:read", "source:search", "artifact:read"],
+      "actionId": null,
+      "mutatesSource": false,
+      "providerRequired": false
+    },
+    {
+      "id": "evolution-map",
+      "name": "Evolution Map",
+      "description": "Refresh the advisory mutation portfolio and learning pressure map.",
+      "permissions": ["artifact:read", "artifact:write", "evolution:plan"],
+      "actionId": "evolve",
+      "mutatesSource": false,
+      "providerRequired": false
+    },
+    {
+      "id": "runtime-evidence",
+      "name": "Runtime Evidence",
+      "description": "Read live autonomy, queue, provider, and reliability evidence.",
+      "permissions": ["runtime:read", "queue:read", "artifact:read"],
+      "actionId": "status",
+      "mutatesSource": false,
+      "providerRequired": false
+    },
+    {
+      "id": "discovery-brief",
+      "name": "Discovery Brief",
+      "description": "Generate source-backed contradictions and ranked falsifiable hypotheses without provider use.",
+      "permissions": ["source:read", "source:search", "artifact:read"],
+      "actionId": null,
+      "mutatesSource": false,
+      "providerRequired": false
+    }
+  ],
+  "skills": [
+    {
+      "id": "evidence-research",
+      "name": "Evidence Research",
+      "description": "Research a question through ranked local evidence, provenance, uncertainty, and explicit gaps.",
+      "triggers": ["research", "investigate", "learn", "evidence", "source", "compare"],
+      "workflow": ["Define the question", "Rank sources", "Separate observations from inference", "Find contradictions", "State confidence and missing proof"],
+      "tools": ["evidence-search", "runtime-evidence"],
+      "contextMode": "isolated",
+      "sideEffects": false
+    },
+    {
+      "id": "discovery-tournament",
+      "name": "Discovery Tournament",
+      "description": "Generate competing capability hypotheses and choose the most falsifiable valuable experiment.",
+      "triggers": ["discover", "creative", "novel", "hypothesis", "experiment", "breakthrough"],
+      "workflow": ["Mine anomalies", "Generate distinct hypotheses", "Score novelty and proof cost", "Select a falsifiable experiment", "Feed outcomes into evolution"],
+      "tools": ["evidence-search", "discovery-brief", "evolution-map", "runtime-evidence"],
+      "contextMode": "isolated",
+      "sideEffects": false
+    },
+    {
+      "id": "contradiction-hunt",
+      "name": "Contradiction Hunt",
+      "description": "Actively search for evidence that falsifies the current plan, champion, or assumption.",
+      "triggers": ["contradiction", "falsify", "challenge", "assumption", "uncertain", "why"],
+      "workflow": ["State the claim", "Find disconfirming evidence", "Test alternative explanations", "Calibrate severity", "Update the learning signal"],
+      "tools": ["evidence-search", "evolution-map"],
+      "contextMode": "isolated",
+      "sideEffects": false
+    }
+  ],
+  "hooks": [
+    {
+      "id": "briefing-provenance-journal",
+      "event": "task.briefed",
+      "action": "audit.record",
+      "description": "Record routed research briefings without storing source content."
+    }
+  ]
+}

@@ -1,0 +1,45 @@
+{
+  "$schema": "https://schema.tauri.app/config/2",
+  "productName": "Blunder",
+  "version": "1.2.0-alpha.1",
+  "identifier": "ai.obtuse.blunder",
+  "build": {
+    "beforeDevCommand": "npm run dev",
+    "devUrl": "http://localhost:1420",
+    "beforeBuildCommand": "npm run build",
+    "frontendDist": "../dist"
+  },
+  "app": {
+    "windows": [
+      {
+        "label": "main",
+        "title": "Blunder",
+        "width": 1440,
+        "height": 920,
+        "minWidth": 1080,
+        "minHeight": 700,
+        "resizable": true,
+        "fullscreen": false
+      }
+    ],
+    "security": {
+      "capabilities": ["main"],
+      "csp": "default-src 'self'; connect-src ipc: http://ipc.localhost; img-src 'self' data: asset:; style-src 'self'; script-src 'self'; object-src 'none'; frame-ancestors 'none'"
+    }
+  },
+  "bundle": {
+    "active": true,
+    "targets": ["nsis"],
+    "externalBin": ["binaries/blunder-core"],
+    "createUpdaterArtifacts": false,
+    "windows": {
+      "webviewInstallMode": {
+        "type": "downloadBootstrapper",
+        "silent": true
+      },
+      "nsis": {
+        "installMode": "currentUser"
+      }
+    }
+  }
+}

@@ -1,0 +1,18 @@
+{
+  "telemetry": {
+    "measurementSource": "operator-supplied-example-not-live-telemetry",
+    "operatorIdle": true,
+    "foregroundMissionActive": false,
+    "cpuPercent": 12.5,
+    "availableMemoryBytes": 8589934592,
+    "thermalState": "nominal",
+    "queueFailures": 0,
+    "destructiveAuthority": false
+  },
+  "budget": {
+    "maximumTasks": 3,
+    "maximumSeconds": 180,
+    "maximumCpuPercent": 35,
+    "minimumAvailableMemoryBytes": 2147483648
+  }
+}

@@ -1,0 +1,27 @@
+{
+  "maximumParallel": 2,
+  "specs": [
+    {
+      "id": "kernel-python-contracts",
+      "commandKind": "python-compile",
+      "targets": [
+        "blunder/quorum_graph.py",
+        "blunder/deterministic_shards.py",
+        "blunder/quorum_kernel.py"
+      ],
+      "repeatCount": 2,
+      "timeoutSeconds": 30,
+      "memoryBytes": 536870912
+    },
+    {
+      "id": "kernel-shell-syntax",
+      "commandKind": "node-check",
+      "targets": [
+        "blunder/shell/static/app.js"
+      ],
+      "repeatCount": 2,
+      "timeoutSeconds": 30,
+      "memoryBytes": 536870912
+    }
+  ]
+}

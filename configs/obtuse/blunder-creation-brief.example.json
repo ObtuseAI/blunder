@@ -1,0 +1,9 @@
+{
+  "name": "Blunder Creation Forge",
+  "outcome": "Help an operator turn an ambitious AI or automation idea into a distinctive, understandable, safe, and testable product.",
+  "audiences": ["builder", "reviewer", "operator"],
+  "moments": ["shape the human outcome", "compare creative directions", "compile the AI system", "review automation effects", "recover from failed proof"],
+  "principles": ["clarity before density", "evidence before confidence", "control before automation", "delight through understanding"],
+  "avoid": ["generic dashboard", "decorative AI glow", "chat as the only interaction", "hidden external effects"],
+  "directionCount": 4
+}

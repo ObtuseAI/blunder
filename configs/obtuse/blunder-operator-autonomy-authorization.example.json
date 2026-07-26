@@ -1,0 +1,28 @@
+{
+  "schema": "obtuse.blunder.operator_autonomy_authorization.v1",
+  "authorizationId": "local-operator-authorization-required",
+  "enabled": false,
+  "expiresAt": null,
+  "operatorStatement": "No standing authorization is granted by this example.",
+  "approvedScopes": [
+    "bounded_self_coding"
+  ],
+  "allowReliabilityBudgetOverride": false,
+  "allowHistoricalV5QuarantineOnlyRetirement": false,
+  "preserveHardDenials": [
+    "windows_permission_or_acl_bypass",
+    "secret_printing",
+    "live_benchmark_launch",
+    "destructive_filesystem_cleanup",
+    "git_push",
+    "safety_boundary_weakening",
+    "production_deploy",
+    "public_submission"
+  ],
+  "requiresSeparateApproval": [
+    "live_terminal_bench_launch",
+    "destructive_cleanup",
+    "credential_changes",
+    "public_submission"
+  ]
+}

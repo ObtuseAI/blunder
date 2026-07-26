@@ -1,0 +1,106 @@
+{
+  "schema": "obtuse.blunder.capability-plugin.v1",
+  "id": "autonomy",
+  "name": "Blunder Autonomy Operations",
+  "version": "2.0.0",
+  "description": "Runtime supervision, compound evolution, queue health, and operator evidence workflows.",
+  "firstParty": true,
+  "enabled": true,
+  "tools": [
+    {
+      "id": "runtime-status",
+      "name": "Runtime Status",
+      "description": "Read process identity, heartbeat, queue, reliability, and provider evidence.",
+      "permissions": ["runtime:read", "queue:read", "artifact:read"],
+      "actionId": "status",
+      "mutatesSource": false,
+      "providerRequired": false
+    },
+    {
+      "id": "evolution-refresh",
+      "name": "Evolution Refresh",
+      "description": "Refresh outcome-weighted mutation family guidance.",
+      "permissions": ["evolution:plan", "artifact:read", "artifact:write"],
+      "actionId": "evolve",
+      "mutatesSource": false,
+      "providerRequired": false
+    },
+    {
+      "id": "planning-calibration",
+      "name": "Planning Calibration",
+      "description": "Verify that autonomous planning retains evidence, rollback, and stop gates.",
+      "permissions": ["artifact:read", "artifact:write", "queue:read"],
+      "actionId": "planning_gate",
+      "mutatesSource": false,
+      "providerRequired": false
+    },
+    {
+      "id": "program-canary",
+      "name": "Mission Program Canary",
+      "description": "Verify disjoint specialist claims, budgets, synthesis, and untouched primary state.",
+      "permissions": ["artifact:read", "source:read"],
+      "actionId": null,
+      "mutatesSource": false,
+      "providerRequired": false
+    },
+    {
+      "id": "bounded-self-coding",
+      "name": "Bounded Self-Coding Preflight",
+      "description": "Require explicit unexpired authority, one valid target, hard denials, and fixed budgets.",
+      "permissions": ["source:read", "source:write-bounded", "provider:bounded"],
+      "actionId": null,
+      "mutatesSource": true,
+      "providerRequired": true
+    }
+  ],
+  "skills": [
+    {
+      "id": "runtime-triage",
+      "name": "Runtime Triage",
+      "description": "Classify runtime health from PID identity, heartbeat, queue progress, and reliability budgets.",
+      "triggers": ["runtime", "idle", "autonomy", "heartbeat", "process", "stuck", "operational"],
+      "workflow": ["Verify process identity", "Read heartbeat age", "Inspect queue state", "Check reliability budget", "Recommend the minimum action"],
+      "tools": ["runtime-status", "planning-calibration"],
+      "contextMode": "on-demand",
+      "sideEffects": false
+    },
+    {
+      "id": "compound-steward",
+      "name": "Compound Evolution Steward",
+      "description": "Use outcome history, stagnation pressure, and champion floors to choose the next search niche.",
+      "triggers": ["compound", "evolve", "mutation", "champion", "stagnation", "improvement"],
+      "workflow": ["Read outcome history", "Detect stagnation", "Rank mutation families", "Preserve champion floor", "Refresh bounded candidate budget"],
+      "tools": ["evolution-refresh", "runtime-status"],
+      "contextMode": "isolated",
+      "sideEffects": false
+    },
+    {
+      "id": "autonomy-audit",
+      "name": "Autonomy Audit",
+      "description": "Prove continuous operation remains useful, bounded, observable, and recoverable.",
+      "triggers": ["audit", "autonomous", "continuous", "queue", "provider", "reliability"],
+      "workflow": ["Read live state", "Check queue yield", "Check provider failures", "Verify bounded execution", "Preserve terminal evidence"],
+      "tools": ["runtime-status", "planning-calibration", "evolution-refresh"],
+      "contextMode": "isolated",
+      "sideEffects": false
+    },
+    {
+      "id": "self-coding-steward",
+      "name": "Bounded Self-Coding Steward",
+      "description": "Launch one authorized isolated change while preserving review, integration, commit, and push boundaries.",
+      "triggers": ["self-code", "self-coding", "autonomous coding", "mission campaign", "parallel agent"],
+      "workflow": ["Read operator authorization", "Validate one target and hard denials", "Enforce fixed budget", "Launch isolated mission", "Return review-only evidence"],
+      "tools": ["bounded-self-coding", "program-canary", "runtime-status"],
+      "contextMode": "isolated",
+      "sideEffects": true
+    }
+  ],
+  "hooks": [
+    {
+      "id": "autonomy-mission-journal",
+      "event": "mission.completed",
+      "action": "audit.record",
+      "description": "Record completed autonomy inspections and evolution actions."
+    }
+  ]
+}

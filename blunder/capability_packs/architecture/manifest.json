@@ -1,0 +1,87 @@
+{
+  "schema": "obtuse.blunder.capability-plugin.v1",
+  "id": "architecture",
+  "name": "Blunder Architecture Lab",
+  "version": "1.0.0",
+  "description": "System design, performance reasoning, and durable contract workflows.",
+  "firstParty": true,
+  "enabled": true,
+  "tools": [
+    {
+      "id": "system-map",
+      "name": "System Map",
+      "description": "Map source relationships, evidence surfaces, and operational boundaries.",
+      "permissions": ["source:read", "source:search", "artifact:read"],
+      "actionId": null,
+      "mutatesSource": false,
+      "providerRequired": false
+    },
+    {
+      "id": "architecture-proof",
+      "name": "Architecture Proof Gate",
+      "description": "Validate evidence, rollback, simplicity, and stop conditions for a system plan.",
+      "permissions": ["artifact:read", "artifact:write", "queue:read"],
+      "actionId": "planning_gate",
+      "mutatesSource": false,
+      "providerRequired": false
+    },
+    {
+      "id": "architecture-regression",
+      "name": "Architecture Regression",
+      "description": "Run integration proof after cross-cutting architecture work.",
+      "permissions": ["source:read", "tests:run"],
+      "actionId": "tests",
+      "mutatesSource": false,
+      "providerRequired": false
+    },
+    {
+      "id": "branch-engineer",
+      "name": "Isolated Architecture Engineer",
+      "description": "Implement a bounded architecture experiment inside a separate Git worktree.",
+      "permissions": ["source:read", "source:search", "source:write-bounded", "provider:bounded", "tests:run"],
+      "actionId": null,
+      "mutatesSource": true,
+      "providerRequired": true
+    }
+  ],
+  "skills": [
+    {
+      "id": "systems-architecture",
+      "name": "Systems Architecture",
+      "description": "Design cohesive boundaries, data flow, failure isolation, and evolutionary seams.",
+      "triggers": ["architecture", "system", "design", "scale", "interface", "boundary"],
+      "workflow": ["Map current topology", "Identify invariants", "Compare architectures", "Minimize coupling", "Prove migration and rollback"],
+      "tools": ["system-map", "architecture-proof", "architecture-regression"],
+      "contextMode": "isolated",
+      "sideEffects": false
+    },
+    {
+      "id": "performance-engineering",
+      "name": "Performance Engineering",
+      "description": "Find measured bottlenecks and improve latency, throughput, or memory without speculative complexity.",
+      "triggers": ["performance", "slow", "latency", "memory", "throughput", "optimize"],
+      "workflow": ["Define the metric", "Locate the hot path", "Form competing causes", "Apply the smallest leverage point", "Measure regression"],
+      "tools": ["system-map", "architecture-regression", "branch-engineer"],
+      "contextMode": "isolated",
+      "sideEffects": true
+    },
+    {
+      "id": "contract-design",
+      "name": "Contract Design",
+      "description": "Create strict typed schemas and compatibility boundaries that fail clearly.",
+      "triggers": ["schema", "contract", "api", "type", "protocol", "data"],
+      "workflow": ["Identify producers and consumers", "Define typed invariants", "Reject ambiguous states", "Plan compatibility", "Validate end to end"],
+      "tools": ["system-map", "architecture-proof", "architecture-regression", "branch-engineer"],
+      "contextMode": "on-demand",
+      "sideEffects": true
+    }
+  ],
+  "hooks": [
+    {
+      "id": "architecture-brief-journal",
+      "event": "task.briefed",
+      "action": "audit.record",
+      "description": "Record architecture brief boundaries and evidence size."
+    }
+  ]
+}

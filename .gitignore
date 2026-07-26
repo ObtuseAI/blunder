@@ -1,0 +1,53 @@
+# Python caches and local environments
+__pycache__/
+*.py[cod]
+*.pyd
+.venv/
+.venv-*/
+.pytest_cache/
+.coverage
+*.egg-info/
+.mypy_cache/
+.ruff_cache/
+
+# JavaScript dependencies and generated builds
+**/node_modules/
+**/.bun/
+**/dist/
+**/.turbo/
+**/.next/
+coverage/
+**/src-tauri/target/
+desktop/src-tauri/binaries/*.exe
+desktop/sidecar-build/
+desktop/src-tauri/gen/
+desktop/src-tauri/icons/*
+!desktop/src-tauri/icons/icon-source.png
+!desktop/src-tauri/icons/icon.ico
+.tooling/
+
+# Local credentials and environment overrides
+.env
+.env.*
+!.env.example
+configs/obtuse/blunder-operator-autonomy-authorization.json
+
+# Runtime and benchmark evidence
+artifacts/
+*.log
+*.pid
+.private-repo-readiness.json
+FINAL_REPORT.json
+final_state_decision_record.json
+normal_idle_fast_cycle_summary.json
+post_cycle_validation_summary.json
+proof_bundle_record.json
+provider_delta_record.json
+queue_delta_record.json
+
+# Editor and operating-system state
+.idea/
+.vscode/
+*.swp
+Thumbs.db
+Desktop.ini

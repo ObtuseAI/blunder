@@ -1,0 +1,152 @@
+name: Quality
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+      - codex/**
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: blunder-proof-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  ccos-cross-platform:
+    name: ccos-${{ matrix.os }}-python-${{ matrix.python-version }}
+    runs-on: ${{ matrix.os }}
+    timeout-minutes: 10
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [windows-latest, ubuntu-latest]
+        python-version: ['3.11', '3.13']
+    steps:
+      - name: Checkout exact source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - name: Configure Python
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Configure Node
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: '20'
+      - name: Prove CCOS runtime boundaries
+        shell: pwsh
+        run: |
+          python -m compileall -q blunder
+          if ($LASTEXITCODE -ne 0) { throw 'Python compilation failed.' }
+          node --check blunder/shell/static/app.js
+          if ($LASTEXITCODE -ne 0) { throw 'Shell JavaScript syntax validation failed.' }
+          python -m unittest tests.test_blunder_ccos_runtime tests.test_blunder_ccos_canary -v
+          if ($LASTEXITCODE -ne 0) { throw 'CCOS runtime boundary suite failed.' }
+
+  coverage:
+    # The proof pipeline above is custom PowerShell and the ccos matrix runs
+    # `unittest` (not pytest), so coverage lives in its own small job. It wraps
+    # the same unittest suite under coverage.py and enforces a conservative floor.
+    name: coverage
+    runs-on: windows-latest
+    timeout-minutes: 15
+    steps:
+      - name: Checkout exact source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - name: Configure Python
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: '3.13'
+      - name: Install coverage tooling
+        shell: pwsh
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install coverage
+      - name: Measure coverage over the unittest suite
+        shell: pwsh
+        run: |
+          coverage run --source=blunder -m unittest discover -s tests
+          coverage report --fail-under=78
+          "## Coverage" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8
+          "``````" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8
+          coverage report | Select-Object -Last 1 | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8
+          "``````" | Out-File -FilePath $env:GITHUB_STEP_SUMMARY -Append -Encoding utf8
+
+  desktop-proof:
+    name: desktop-proof
+    runs-on: windows-latest
+    timeout-minutes: 20
+    steps:
+      - name: Checkout exact source
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - name: Configure Python
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: '3.13'
+      - name: Configure Node
+        uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
+        with:
+          node-version: '24'
+          cache: npm
+          cache-dependency-path: desktop/package-lock.json
+      - name: Configure pinned Rust
+        shell: pwsh
+        run: |
+          rustup toolchain install 1.97.1 --profile minimal
+          rustup default 1.97.1
+          rustc --version
+      - name: Build authenticated Python sidecar
+        shell: pwsh
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install --editable ".[desktop-build]"
+          powershell -NoProfile -ExecutionPolicy Bypass -File scripts\obtuse\build-blunder-vnext-sidecar.ps1 -Root . -Python (Get-Command python).Source
+          powershell -NoProfile -ExecutionPolicy Bypass -File scripts\obtuse\test-blunder-vnext-sidecar.ps1 -Root . -Executable desktop\src-tauri\binaries\blunder-core-x86_64-pc-windows-msvc.exe
+      - name: Prove renderer and native host
+        working-directory: desktop
+        shell: pwsh
+        run: |
+          npm ci
+          npm audit --audit-level=high
+          npm run typecheck
+          npm run build
+          cargo check --locked --manifest-path src-tauri\Cargo.toml
+
+  release-proof:
+    name: release-proof
+    runs-on: windows-latest
+    timeout-minutes: 20
+    steps:
+      - name: Materialize exact source
+        shell: powershell
+        env:
+          BLUNDER_ARCHIVE_URL: https://api.github.com/repos/${{ github.repository }}/zipball/${{ github.sha }}
+          BLUNDER_TOKEN: ${{ github.token }}
+        run: |
+          $ErrorActionPreference = 'Stop'
+          $headers = @{
+            Authorization = "Bearer $env:BLUNDER_TOKEN"
+            Accept = 'application/vnd.github+json'
+            'X-GitHub-Api-Version' = '2022-11-28'
+          }
+          Invoke-WebRequest -Headers $headers -Uri $env:BLUNDER_ARCHIVE_URL -OutFile source.zip
+          Expand-Archive -LiteralPath source.zip -DestinationPath source
+          $root = Get-ChildItem -LiteralPath source -Directory | Select-Object -First 1
+          if (-not $root) { throw 'GitHub source archive did not contain a repository root.' }
+          "BLUNDER_ROOT=$($root.FullName)" | Add-Content -LiteralPath $env:GITHUB_ENV -Encoding UTF8
+          "BLUNDER_SOURCE_SHA=${{ github.sha }}" | Add-Content -LiteralPath $env:GITHUB_ENV -Encoding UTF8
+          git -C $root.FullName init
+          git -C $root.FullName remote add origin "https://github.com/${{ github.repository }}.git"
+          git -C $root.FullName add --all
+          git -C $root.FullName -c user.name=blunder-proof -c user.email=proof@invalid commit -m "Proof materialization ${{ github.sha }}"
+      - name: Run Blunder proof court
+        shell: powershell
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          & "$env:BLUNDER_ROOT/scripts/obtuse/blunder-continuous-proof.ps1" `
+            -Root $env:BLUNDER_ROOT `
+            -OutputRoot "$env:RUNNER_TEMP/blunder-release-proof"

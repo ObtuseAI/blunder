@@ -1,0 +1,15 @@
+{
+  "name": "Blunder Product",
+  "background": "#090B0D",
+  "surface": "#15191E",
+  "text": "#F2F5F7",
+  "muted": "#AAB4BE",
+  "primary": "#C9F269",
+  "accent": "#74B9FF",
+  "danger": "#FF6B7A",
+  "focus": "#F4D35E",
+  "typeBasePx": 16,
+  "typeRatio": 1.25,
+  "spacingBasePx": 4,
+  "radiusBasePx": 4
+}

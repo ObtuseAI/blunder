@@ -1,0 +1,127 @@
+{
+  "schema": "obtuse.blunder.capability-plugin.v1",
+  "id": "creation",
+  "name": "Blunder Creation Forge",
+  "version": "1.0.0",
+  "description": "First-party creative direction, human-centered AI architecture, durable automation, open tool contracts, prompt programs, trace evaluation, and quality-diversity selection.",
+  "firstParty": true,
+  "enabled": true,
+  "tools": [
+    {
+      "id": "creative-compass",
+      "name": "Creative Compass",
+      "description": "Compile distinct product directions, experience storyboards, accessibility rules, and open interface contracts without declaring an unevidenced aesthetic winner.",
+      "permissions": ["artifact:read", "artifact:write"],
+      "actionId": null,
+      "mutatesSource": false,
+      "providerRequired": false
+    },
+    {
+      "id": "ai-system-architect",
+      "name": "AI System Architect",
+      "description": "Design human-controlled AI topology across inputs, context, reasoning, tools, memory, risk, product experience, and evaluation.",
+      "permissions": ["source:read", "artifact:read", "artifact:write"],
+      "actionId": null,
+      "mutatesSource": false,
+      "providerRequired": false
+    },
+    {
+      "id": "automation-compiler",
+      "name": "Automation Graph Compiler",
+      "description": "Compile typed acyclic workflows with durable state, idempotency, bounded retries, human gates, compensation, and transition traces.",
+      "permissions": ["artifact:read", "artifact:write", "queue:read"],
+      "actionId": null,
+      "mutatesSource": false,
+      "providerRequired": false
+    },
+    {
+      "id": "open-tool-foundry",
+      "name": "Open Tool Foundry",
+      "description": "Create least-privilege Blunder and MCP-compatible tool contracts with JSON Schema, explicit effects, approvals, timeouts, and idempotency.",
+      "permissions": ["source:read", "artifact:read", "artifact:write"],
+      "actionId": null,
+      "mutatesSource": false,
+      "providerRequired": false
+    },
+    {
+      "id": "prompt-programs",
+      "name": "Prompt and Context Programs",
+      "description": "Compile versionable schema-bound model programs with ranked context budgets, injection boundaries, honest completion rules, and evaluation plans.",
+      "permissions": ["source:read", "source:search", "artifact:read", "artifact:write"],
+      "actionId": null,
+      "mutatesSource": false,
+      "providerRequired": false
+    },
+    {
+      "id": "trace-observatory",
+      "name": "Trace Observatory",
+      "description": "Grade model, tool, handoff, guardrail, human, and output spans for structure, approval, grounding, errors, cost, tokens, and latency.",
+      "permissions": ["artifact:read", "artifact:write", "runtime:read"],
+      "actionId": null,
+      "mutatesSource": false,
+      "providerRequired": false
+    },
+    {
+      "id": "creative-arena",
+      "name": "Creative Quality-Diversity Arena",
+      "description": "Preserve evidenced high-quality candidates across novelty and coherence niches, with usefulness and accessibility as promotion gates.",
+      "permissions": ["artifact:read", "artifact:write"],
+      "actionId": null,
+      "mutatesSource": false,
+      "providerRequired": false
+    }
+  ],
+  "skills": [
+    {
+      "id": "creative-product-direction",
+      "name": "Creative Product Direction",
+      "description": "Develop multiple ownable product directions and prove them through storyboards, prototypes, accessibility, and quality-diversity evidence.",
+      "triggers": ["creative", "design", "brand", "visual direction", "experience", "original", "novel"],
+      "workflow": ["Define the human outcome", "Generate meaningfully different directions", "Storyboard decisive moments", "Prototype with open tokens", "Select through evidence, not taste alone"],
+      "tools": ["creative-compass", "creative-arena"],
+      "contextMode": "isolated",
+      "sideEffects": false
+    },
+    {
+      "id": "human-centered-ai-product",
+      "name": "Human-Centered AI Product Engineering",
+      "description": "Design AI products around user decisions, honest capabilities, uncertainty, feedback, control, graceful failure, and measurable value.",
+      "triggers": ["ai product", "copilot", "assistant", "agent", "recommendation", "generative ui", "human centered ai"],
+      "workflow": ["Prove AI creates unique user value", "Map user-owned decisions", "Design context and tool topology", "Expose limits and control", "Build trace and product evals"],
+      "tools": ["ai-system-architect", "prompt-programs", "open-tool-foundry", "trace-observatory"],
+      "contextMode": "isolated",
+      "sideEffects": false
+    },
+    {
+      "id": "durable-automation-engineering",
+      "name": "Durable Automation Engineering",
+      "description": "Build inspectable automations that resume safely, avoid duplicate effects, pause for people, compensate failures, and expose every transition.",
+      "triggers": ["automation", "workflow", "orchestration", "trigger", "schedule", "integration", "durable"],
+      "workflow": ["Define trigger and terminal states", "Compile a typed DAG", "Assign idempotency and timeouts", "Gate and compensate effects", "Replay traces before execution"],
+      "tools": ["automation-compiler", "open-tool-foundry", "trace-observatory"],
+      "contextMode": "isolated",
+      "sideEffects": false
+    },
+    {
+      "id": "prompt-context-engineering",
+      "name": "Prompt and Context Engineering",
+      "description": "Build prompt programs as typed, versioned, injection-resistant software with deliberate context allocation and repeatable evaluation.",
+      "triggers": ["prompt", "context", "structured output", "tool calling", "grounding", "injection", "eval"],
+      "workflow": ["Define typed input and output", "Separate instructions from untrusted data", "Budget and rank context", "Specify honest terminal states", "Evaluate traces and regressions"],
+      "tools": ["prompt-programs", "open-tool-foundry", "trace-observatory"],
+      "contextMode": "isolated",
+      "sideEffects": false
+    },
+    {
+      "id": "creative-ai-automation-arena",
+      "name": "Creative AI Automation Arena",
+      "description": "Compare AI and automation designs across grounded task value, novelty, coherence, accessibility, trace quality, reliability, cost, and recovery.",
+      "triggers": ["ai evaluation", "automation benchmark", "creative evaluation", "compare workflows", "trace grading", "quality diversity"],
+      "workflow": ["Declare the case and evidence", "Capture complete traces", "Grade hard gates", "Archive diverse qualifying candidates", "Promote only repeatable evidence"],
+      "tools": ["creative-arena", "trace-observatory", "ai-system-architect", "automation-compiler"],
+      "contextMode": "isolated",
+      "sideEffects": false
+    }
+  ],
+  "hooks": []
+}

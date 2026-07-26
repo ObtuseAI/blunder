@@ -1,0 +1,124 @@
+{
+  "schema": "obtuse.blunder.capability-plugin.v1",
+  "id": "kernel",
+  "name": "Blunder Quorum Graph Kernel",
+  "version": "1.0.0",
+  "description": "Content-addressed semantic topology, isolated validation micro-spaces, unanimous evidence quorum, immune quarantine, and bounded metabolic planning.",
+  "firstParty": true,
+  "enabled": true,
+  "tools": [
+    {
+      "id": "semantic-graph",
+      "name": "Semantic Graph",
+      "description": "Derive a content-addressed graph of files, symbols, imports, and review-state identity while source files remain canonical.",
+      "permissions": ["source:read", "source:search", "artifact:write"],
+      "actionId": null,
+      "mutatesSource": false,
+      "providerRequired": false
+    },
+    {
+      "id": "impact-frontier",
+      "name": "Reactive Impact Frontier",
+      "description": "Propagate a bounded source change through dependent files and contained symbols without executing or mutating code.",
+      "permissions": ["source:read", "source:search"],
+      "actionId": null,
+      "mutatesSource": false,
+      "providerRequired": false
+    },
+    {
+      "id": "validation-microspace",
+      "name": "Deterministic Validation Micro-space",
+      "description": "Run allowlisted syntax or integration proof through the validation broker, request single-process memory limits, report the actual kernel boundary, and seal the transcript.",
+      "permissions": ["source:read", "tests:run", "artifact:write"],
+      "actionId": null,
+      "mutatesSource": false,
+      "providerRequired": false
+    },
+    {
+      "id": "variant-tournament",
+      "name": "Deterministic Variant Tournament",
+      "description": "Rank passing repeatable shard evidence by measured latency while refusing automatic merge or deletion.",
+      "permissions": ["artifact:read"],
+      "actionId": null,
+      "mutatesSource": false,
+      "providerRequired": false
+    },
+    {
+      "id": "quorum-court",
+      "name": "Unanimous Quorum Court",
+      "description": "Bind proposer, skeptic, and judge votes from three independent contexts to one candidate, graph, checkpoint, and proof set.",
+      "permissions": ["source:read", "artifact:read", "checkpoint:read"],
+      "actionId": null,
+      "mutatesSource": false,
+      "providerRequired": false
+    },
+    {
+      "id": "immune-quarantine",
+      "name": "Immune Quarantine",
+      "description": "Isolate evidence disagreement, digest drift, regression, or critical findings and raise an explicit rollback requirement when necessary.",
+      "permissions": ["artifact:read", "checkpoint:read"],
+      "actionId": null,
+      "mutatesSource": false,
+      "providerRequired": false
+    },
+    {
+      "id": "metabolic-plan",
+      "name": "Metabolic Plan",
+      "description": "Spend only measured idle CPU, memory, thermal, and time budget on bounded read-only improvement work.",
+      "permissions": ["source:read", "artifact:read", "queue:read", "runtime:read", "evolution:plan"],
+      "actionId": null,
+      "mutatesSource": false,
+      "providerRequired": false
+    }
+  ],
+  "skills": [
+    {
+      "id": "semantic-systems",
+      "name": "Semantic Systems Engineering",
+      "description": "Reason over live content-addressed source topology and exact dependency impact instead of relying on string logs alone.",
+      "triggers": ["semantic graph", "dependency", "impact", "topology", "ast", "architecture"],
+      "workflow": ["Seal source identity", "Build semantic topology", "Locate high-leverage nodes", "Propagate the change frontier", "Bind conclusions to graph evidence"],
+      "tools": ["semantic-graph", "impact-frontier"],
+      "contextMode": "isolated",
+      "sideEffects": false
+    },
+    {
+      "id": "deterministic-experimentation",
+      "name": "Deterministic Experimentation",
+      "description": "Evaluate bounded variants in isolated validation processes and promote only repeatable measured evidence to quorum review.",
+      "triggers": ["experiment", "variant", "shard", "deterministic", "benchmark", "optimize"],
+      "workflow": ["Define an allowlisted probe", "Bind the graph fingerprint", "Run repeated isolated transcripts", "Reject nondeterminism", "Rank without merging"],
+      "tools": ["validation-microspace", "variant-tournament", "semantic-graph"],
+      "contextMode": "isolated",
+      "sideEffects": false
+    },
+    {
+      "id": "quorum-engineering",
+      "name": "Quorum Engineering",
+      "description": "Require independent creative, adversarial, deterministic, holdout, cost, and rollback evidence before autonomous threshold promotion.",
+      "triggers": ["quorum", "consensus", "proposer", "skeptic", "judge", "verification"],
+      "workflow": ["Bind one candidate digest", "Separate three contexts", "Collect independent evidence", "Require unanimous approval", "Quarantine disagreement"],
+      "tools": ["quorum-court", "immune-quarantine", "validation-microspace"],
+      "contextMode": "isolated",
+      "sideEffects": false
+    },
+    {
+      "id": "metabolic-stewardship",
+      "name": "Metabolic Stewardship",
+      "description": "Turn verified idle capacity into bounded analysis without saturating hardware, mutating queues, or weakening authority gates.",
+      "triggers": ["metabolism", "idle", "background", "continuous", "optimize", "self-improve"],
+      "workflow": ["Read real telemetry", "Require operator idle state", "Enforce thermal and memory gates", "Select bounded analysis", "Stop when any gate closes"],
+      "tools": ["metabolic-plan", "semantic-graph", "impact-frontier", "immune-quarantine"],
+      "contextMode": "on-demand",
+      "sideEffects": false
+    }
+  ],
+  "hooks": [
+    {
+      "id": "quorum-mission-journal",
+      "event": "mission.completed",
+      "action": "audit.record",
+      "description": "Record completed mission identity for later graph, shard, and quorum evidence binding."
+    }
+  ]
+}

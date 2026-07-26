@@ -1,0 +1,13 @@
+{
+  "productName": "Atlas",
+  "goal": "Help small teams plan, prove, and complete resilient private product launches.",
+  "audience": ["product operator", "reviewer"],
+  "platforms": ["web", "ios", "android"],
+  "capabilities": [
+    "create a launch plan",
+    "attach readiness evidence",
+    "review and approve a launch"
+  ],
+  "entities": ["Launch", "Evidence", "Approval"],
+  "constraints": ["private by default", "offline-readable evidence"]
+}

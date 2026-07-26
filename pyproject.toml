@@ -1,0 +1,31 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "blunder-obtuse"
+version = "1.1.0"
+description = "Evidence-bound engineering operating system with isolated missions, constitutional governance, and operator-owned integration"
+readme = "README.md"
+license = {file = "LICENSE"}
+requires-python = ">=3.11"
+dependencies = []
+keywords = ["agentic-ai", "constitutional-ai", "cognitive-operating-system", "developer-tools", "evaluation", "governance"]
+
+[project.optional-dependencies]
+desktop-build = ["pyinstaller>=6,<7"]
+
+[project.scripts]
+blunder-core = "blunder.api.entrypoint:main"
+blunder-promote = "blunder.promotion_cli:main"
+
+[project.urls]
+Repository = "https://github.com/ObtuseAI/blunder"
+Documentation = "https://github.com/ObtuseAI/blunder#readme"
+Issues = "https://github.com/ObtuseAI/blunder/issues"
+
+[tool.setuptools.packages.find]
+include = ["blunder*"]
+
+[tool.setuptools.package-data]
+blunder = ["capability_packs/*/manifest.json", "config/*.json"]

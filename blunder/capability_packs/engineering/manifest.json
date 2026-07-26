@@ -1,0 +1,115 @@
+{
+  "schema": "obtuse.blunder.capability-plugin.v1",
+  "id": "engineering",
+  "name": "Blunder Engineering Core",
+  "version": "2.0.0",
+  "description": "Evidence-first implementation, debugging, review, and regression workflows.",
+  "firstParty": true,
+  "enabled": true,
+  "tools": [
+    {
+      "id": "context-forge",
+      "name": "Context Forge",
+      "description": "Rank bounded workspace evidence before implementation.",
+      "permissions": ["source:read", "source:search"],
+      "actionId": null,
+      "mutatesSource": false,
+      "providerRequired": false
+    },
+    {
+      "id": "planning-proof",
+      "name": "Planning Proof Gate",
+      "description": "Verify planning and coding quality without provider or benchmark work.",
+      "permissions": ["artifact:read", "artifact:write", "queue:read"],
+      "actionId": "planning_gate",
+      "mutatesSource": false,
+      "providerRequired": false
+    },
+    {
+      "id": "integration-tests",
+      "name": "Integration Test Runner",
+      "description": "Run the complete native Blunder integration baseline.",
+      "permissions": ["source:read", "tests:run"],
+      "actionId": "tests",
+      "mutatesSource": false,
+      "providerRequired": false
+    },
+    {
+      "id": "branch-coder",
+      "name": "Isolated Branch Coder",
+      "description": "Apply one provider-backed bounded change inside a disposable Git worktree.",
+      "permissions": ["source:read", "source:search", "source:write-bounded", "provider:bounded", "tests:run"],
+      "actionId": null,
+      "mutatesSource": true,
+      "providerRequired": true
+    },
+    {
+      "id": "intent-firewall",
+      "name": "Intent Diff Firewall",
+      "description": "Reject semantically unrelated hunks before verification or source mutation.",
+      "permissions": ["source:read"],
+      "actionId": null,
+      "mutatesSource": false,
+      "providerRequired": false
+    },
+    {
+      "id": "language-intelligence",
+      "name": "Language Intelligence",
+      "description": "Resolve references, completions, rename previews, diagnostics, and structural diffs.",
+      "permissions": ["source:read", "source:search"],
+      "actionId": null,
+      "mutatesSource": false,
+      "providerRequired": false
+    }
+  ],
+  "skills": [
+    {
+      "id": "build-with-proof",
+      "name": "Build with Proof",
+      "description": "Turn a concrete feature request into evidence, a bounded plan, implementation, and validation.",
+      "triggers": ["build", "implement", "feature", "improve", "evolve", "code"],
+      "workflow": ["Map evidence", "Select a bounded plan", "Apply through the native agent", "Run integration proof", "Record checkpoint"],
+      "tools": ["context-forge", "planning-proof", "integration-tests", "branch-coder"],
+      "contextMode": "on-demand",
+      "sideEffects": true
+    },
+    {
+      "id": "root-cause-debug",
+      "name": "Root Cause Debugging",
+      "description": "Trace failures from observable evidence to the smallest validated repair.",
+      "triggers": ["bug", "debug", "failure", "error", "crash", "timeout", "broken"],
+      "workflow": ["Capture the failing signal", "Find the source path", "Compete causal hypotheses", "Repair the root cause", "Reproduce and regress"],
+      "tools": ["context-forge", "integration-tests", "branch-coder"],
+      "contextMode": "isolated",
+      "sideEffects": true
+    },
+    {
+      "id": "adversarial-review",
+      "name": "Adversarial Code Review",
+      "description": "Challenge correctness, boundaries, regressions, and hidden coupling before promotion.",
+      "triggers": ["review", "audit", "inspect", "quality", "regression", "risk"],
+      "workflow": ["Map changed surfaces", "Test invariants", "Attack failure paths", "Verify rollback", "Report only evidence-backed findings"],
+      "tools": ["context-forge", "planning-proof", "integration-tests"],
+      "contextMode": "isolated",
+      "sideEffects": false
+    },
+    {
+      "id": "semantic-refactor",
+      "name": "Semantic Refactor",
+      "description": "Plan repository-aware changes and reject every hunk that cannot explain its relationship to intent.",
+      "triggers": ["refactor", "rename", "references", "completion", "diagnostics", "semantic"],
+      "workflow": ["Resolve symbols", "Preview structural change", "Evaluate every hunk against intent", "Run validation", "Keep mutation operator-gated"],
+      "tools": ["language-intelligence", "intent-firewall", "integration-tests"],
+      "contextMode": "isolated",
+      "sideEffects": false
+    }
+  ],
+  "hooks": [
+    {
+      "id": "mission-proof-journal",
+      "event": "mission.completed",
+      "action": "audit.record",
+      "description": "Record every completed engineering mission in the immutable capability event journal."
+    }
+  ]
+}

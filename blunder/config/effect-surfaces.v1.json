@@ -1,0 +1,281 @@
+{
+  "schema": "blunder.effect-surface-registry.v1",
+  "sourceRevision": "b473db2f1786efec1bb3c37a2861dd391b4e91eb",
+  "coveredModules": [
+    "blunder.autonomy_lane",
+    "blunder.cognitive_events",
+    "blunder.constitutional_amendments",
+    "blunder.missions.branches",
+    "blunder.native_agent",
+    "blunder.release_governance",
+    "blunder.semantic_editor",
+    "blunder.shell.server",
+    "blunder.shell.service",
+    "blunder.validation_broker"
+  ],
+  "monitoredSinks": [
+    "os.open",
+    "os.remove",
+    "os.replace",
+    "os.unlink",
+    "path.unlink",
+    "shutil.rmtree",
+    "subprocess.Popen",
+    "subprocess.run",
+    "urllib.request.urlopen"
+  ],
+  "sinkExpectations": [
+    {"module": "blunder.autonomy_lane", "symbol": "git_clean", "sink": "subprocess.run", "occurrences": 1},
+    {"module": "blunder.cognitive_events", "symbol": "_append_event", "sink": "os.open", "occurrences": 1},
+    {"module": "blunder.missions.branches", "symbol": "MissionBranchManager._start", "sink": "subprocess.Popen", "occurrences": 1},
+    {"module": "blunder.missions.branches", "symbol": "MissionBranchManager.cancel", "sink": "subprocess.run", "occurrences": 1},
+    {"module": "blunder.missions.branches", "symbol": "MissionBranchManager.reconcile", "sink": "path.unlink", "occurrences": 1},
+    {"module": "blunder.missions.branches", "symbol": "MissionBranchManager.reconcile", "sink": "subprocess.run", "occurrences": 1},
+    {"module": "blunder.missions.branches", "symbol": "process_identity_matches", "sink": "subprocess.run", "occurrences": 1},
+    {"module": "blunder.missions.branches", "symbol": "run_git", "sink": "subprocess.run", "occurrences": 1},
+    {"module": "blunder.native_agent", "symbol": "read_provider_response.execute", "sink": "urllib.request.urlopen", "occurrences": 1},
+    {"module": "blunder.native_agent", "symbol": "restore_snapshot", "sink": "path.unlink", "occurrences": 1},
+    {"module": "blunder.release_governance", "symbol": "git_text", "sink": "subprocess.run", "occurrences": 1},
+    {"module": "blunder.shell.server", "symbol": "JobManager._run", "sink": "subprocess.Popen", "occurrences": 1},
+    {"module": "blunder.shell.server", "symbol": "JobManager.cancel", "sink": "subprocess.run", "occurrences": 1},
+    {"module": "blunder.shell.service", "symbol": "run_json_command", "sink": "subprocess.run", "occurrences": 1},
+    {"module": "blunder.shell.service", "symbol": "search_files", "sink": "subprocess.run", "occurrences": 1},
+    {"module": "blunder.validation_broker", "symbol": "brokered_run", "sink": "subprocess.Popen", "occurrences": 2}
+  ],
+  "surfaces": [
+    {
+      "surfaceId": "autonomy.git-status-probe",
+      "module": "blunder.autonomy_lane",
+      "symbol": "git_clean",
+      "effects": ["subprocess.start"],
+      "adapter": "record_process_boundary",
+      "enforcement": "FAIL_CLOSED",
+      "riskClass": "LOWER_RISK"
+    },
+    {
+      "surfaceId": "autonomy.self-coding-preflight",
+      "module": "blunder.autonomy_lane",
+      "symbol": "self_coding_preflight",
+      "effects": ["self-coding.launch"],
+      "adapter": "record_self_coding_shadow",
+      "enforcement": "SHADOW",
+      "riskClass": "LOWER_RISK"
+    },
+    {
+      "surfaceId": "kernel.append-only-decision-ledger",
+      "module": "blunder.cognitive_events",
+      "symbol": "_append_event",
+      "effects": ["queue.mutate"],
+      "adapter": "_append_event",
+      "enforcement": "SHADOW",
+      "riskClass": "LOWER_RISK"
+    },
+    {
+      "surfaceId": "kernel.amendment-proposal-authoring",
+      "module": "blunder.constitutional_amendments",
+      "symbol": "write_amendment_proposal",
+      "effects": ["policy.root-mutate"],
+      "adapter": "record_root_policy_activation_denial",
+      "enforcement": "FAIL_CLOSED",
+      "riskClass": "HIGH_RISK"
+    },
+    {
+      "surfaceId": "mission.git-compatibility-boundary",
+      "module": "blunder.missions.branches",
+      "symbol": "run_git",
+      "effects": ["subprocess.start"],
+      "adapter": "run_git",
+      "enforcement": "SHADOW",
+      "riskClass": "LOWER_RISK"
+    },
+    {
+      "surfaceId": "mission.process-identity-probe",
+      "module": "blunder.missions.branches",
+      "symbol": "process_identity_matches",
+      "effects": ["subprocess.start"],
+      "adapter": "process_identity_matches",
+      "enforcement": "SHADOW",
+      "riskClass": "LOWER_RISK"
+    },
+    {
+      "surfaceId": "mission.worktree-create",
+      "module": "blunder.missions.branches",
+      "symbol": "MissionBranchManager._start",
+      "effects": ["worktree.create"],
+      "adapter": "record_worktree_creation_boundary",
+      "enforcement": "FAIL_CLOSED",
+      "riskClass": "LOWER_RISK"
+    },
+    {
+      "surfaceId": "mission.worker-process",
+      "module": "blunder.missions.branches",
+      "symbol": "MissionBranchManager._start",
+      "effects": ["subprocess.start"],
+      "adapter": "record_process_boundary",
+      "enforcement": "FAIL_CLOSED",
+      "riskClass": "LOWER_RISK"
+    },
+    {
+      "surfaceId": "mission.worker-cancel",
+      "module": "blunder.missions.branches",
+      "symbol": "MissionBranchManager.cancel",
+      "effects": ["subprocess.start"],
+      "adapter": "record_process_boundary",
+      "enforcement": "FAIL_CLOSED",
+      "riskClass": "LOWER_RISK"
+    },
+    {
+      "surfaceId": "mission.integrate",
+      "module": "blunder.missions.branches",
+      "symbol": "MissionBranchManager.integrate",
+      "effects": ["mission.integrate"],
+      "adapter": "record_mission_integration_boundary",
+      "enforcement": "FAIL_CLOSED",
+      "riskClass": "HIGH_RISK"
+    },
+    {
+      "surfaceId": "mission.reconcile",
+      "module": "blunder.missions.branches",
+      "symbol": "MissionBranchManager.reconcile",
+      "effects": ["subprocess.start", "worktree.create"],
+      "adapter": "record_worktree_creation_boundary",
+      "enforcement": "FAIL_CLOSED",
+      "riskClass": "LOWER_RISK"
+    },
+    {
+      "surfaceId": "mission.cleanup",
+      "module": "blunder.missions.branches",
+      "symbol": "MissionBranchManager.cleanup",
+      "effects": ["mission.cleanup"],
+      "adapter": "record_mission_cleanup_boundary",
+      "enforcement": "FAIL_CLOSED",
+      "riskClass": "HIGH_RISK"
+    },
+    {
+      "surfaceId": "mission.synthesis-worktree",
+      "module": "blunder.missions.branches",
+      "symbol": "MissionBranchManager.synthesize",
+      "effects": ["worktree.create"],
+      "adapter": "record_worktree_creation_boundary",
+      "enforcement": "FAIL_CLOSED",
+      "riskClass": "LOWER_RISK"
+    },
+    {
+      "surfaceId": "native.provider-call",
+      "module": "blunder.native_agent",
+      "symbol": "read_provider_response.execute",
+      "effects": ["provider.call"],
+      "adapter": "record_provider_boundary",
+      "enforcement": "FAIL_CLOSED",
+      "riskClass": "HIGH_RISK"
+    },
+    {
+      "surfaceId": "native.source-mutation",
+      "module": "blunder.native_agent",
+      "symbol": "apply_proposal",
+      "effects": ["source.mutate"],
+      "adapter": "record_source_mutation_boundary",
+      "enforcement": "FAIL_CLOSED",
+      "riskClass": "HIGH_RISK"
+    },
+    {
+      "surfaceId": "native.rollback",
+      "module": "blunder.native_agent",
+      "symbol": "restore_snapshot",
+      "effects": ["source.mutate"],
+      "adapter": "record_source_mutation_boundary",
+      "enforcement": "FAIL_CLOSED",
+      "riskClass": "HIGH_RISK"
+    },
+    {
+      "surfaceId": "release.git-probes",
+      "module": "blunder.release_governance",
+      "symbol": "git_text",
+      "effects": ["subprocess.start"],
+      "adapter": "git_text",
+      "enforcement": "SHADOW",
+      "riskClass": "LOWER_RISK"
+    },
+    {
+      "surfaceId": "release.closed-authority",
+      "module": "blunder.release_governance",
+      "symbol": "build_release_manifest",
+      "effects": ["deployment.production", "git.commit", "git.push", "release.publish"],
+      "adapter": "record_release_governance_boundaries",
+      "enforcement": "FAIL_CLOSED",
+      "riskClass": "HIGH_RISK"
+    },
+    {
+      "surfaceId": "shell.editor-save",
+      "module": "blunder.semantic_editor",
+      "symbol": "save_document",
+      "effects": ["source.mutate"],
+      "adapter": "record_guarded_source_write_boundary",
+      "enforcement": "FAIL_CLOSED",
+      "riskClass": "HIGH_RISK"
+    },
+    {
+      "surfaceId": "shell.action-dispatch",
+      "module": "blunder.shell.server",
+      "symbol": "JobManager._run",
+      "effects": ["subprocess.start"],
+      "adapter": "record_shell_action_boundary",
+      "enforcement": "FAIL_CLOSED",
+      "riskClass": "LOWER_RISK"
+    },
+    {
+      "surfaceId": "shell.action-cancel",
+      "module": "blunder.shell.server",
+      "symbol": "JobManager.cancel",
+      "effects": ["subprocess.start"],
+      "adapter": "record_process_boundary",
+      "enforcement": "FAIL_CLOSED",
+      "riskClass": "LOWER_RISK"
+    },
+    {
+      "surfaceId": "shell.immutable-task-denials",
+      "module": "blunder.shell.server",
+      "symbol": "JobManager.start",
+      "effects": [
+        "benchmark.live-launch",
+        "credentials.reveal",
+        "deployment.production",
+        "filesystem.destructive-cleanup",
+        "git.push",
+        "permission.bypass",
+        "policy.root-mutate",
+        "release.publish"
+      ],
+      "adapter": "record_requested_denial_boundaries",
+      "enforcement": "FAIL_CLOSED",
+      "riskClass": "HIGH_RISK"
+    },
+    {
+      "surfaceId": "shell.local-json-command",
+      "module": "blunder.shell.service",
+      "symbol": "run_json_command",
+      "effects": ["subprocess.start"],
+      "adapter": "record_process_boundary",
+      "enforcement": "FAIL_CLOSED",
+      "riskClass": "LOWER_RISK"
+    },
+    {
+      "surfaceId": "shell.source-search-command",
+      "module": "blunder.shell.service",
+      "symbol": "search_files",
+      "effects": ["subprocess.start"],
+      "adapter": "record_process_boundary",
+      "enforcement": "FAIL_CLOSED",
+      "riskClass": "LOWER_RISK"
+    },
+    {
+      "surfaceId": "validation.process-and-network",
+      "module": "blunder.validation_broker",
+      "symbol": "brokered_run",
+      "effects": ["network.external", "subprocess.start"],
+      "adapter": "record_validation_boundaries",
+      "enforcement": "FAIL_CLOSED",
+      "riskClass": "HIGH_RISK"
+    }
+  ]
+}

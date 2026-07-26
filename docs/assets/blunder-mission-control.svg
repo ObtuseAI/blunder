@@ -1,0 +1,128 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1600" height="900" viewBox="0 0 1600 900" role="img" aria-labelledby="title desc">
+  <title id="title">Blunder mission control system</title>
+  <desc id="desc">A dark green product diagram showing how Blunder converts operator intent into an isolated, proven, reviewable patch.</desc>
+  <defs>
+    <linearGradient id="background" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#06110d"/>
+      <stop offset=".56" stop-color="#0a1d17"/>
+      <stop offset="1" stop-color="#07120f"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#86efac"/>
+      <stop offset="1" stop-color="#10b981"/>
+    </linearGradient>
+    <filter id="glow" x="-40%" y="-40%" width="180%" height="180%">
+      <feGaussianBlur stdDeviation="10" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <style>
+      .sans{font-family:Inter,Segoe UI,Arial,sans-serif}
+      .mono{font-family:JetBrains Mono,Cascadia Code,Consolas,monospace}
+      .card{fill:#0c221a;stroke:#1e4d3b;stroke-width:2}
+      .muted{fill:#8ba99b}
+      .label{fill:#e6fff3;font-size:19px;font-weight:700}
+      .small{fill:#8ba99b;font-size:14px}
+    </style>
+  </defs>
+  <rect width="1600" height="900" fill="url(#background)"/>
+  <circle cx="1375" cy="115" r="290" fill="#0f6b4a" opacity=".11"/>
+  <circle cx="80" cy="850" r="260" fill="#22c55e" opacity=".07"/>
+
+  <g class="sans">
+    <text x="88" y="90" fill="#f4fff9" font-size="48" font-weight="780">BLUNDER</text>
+    <text x="88" y="132" fill="#69e8a8" font-size="20" letter-spacing="3">EVIDENCE-BOUND ENGINEERING</text>
+    <text x="88" y="174" class="muted" font-size="19">Intent becomes a mission. Proof becomes a patch. Authority stays with the operator.</text>
+
+    <g transform="translate(88 232)">
+      <rect width="1424" height="500" rx="28" fill="#081a14" stroke="#1d4637" stroke-width="2"/>
+      <text x="34" y="49" fill="#dffbed" font-size="17" font-weight="720">MISSION CONTROL</text>
+      <text x="1135" y="49" class="small mono">PRIMARY TREE REMAINS UNTOUCHED</text>
+
+      <g transform="translate(42 95)">
+        <rect width="220" height="136" rx="20" class="card"/>
+        <text x="22" y="36" class="small mono">01 / BRIEF</text>
+        <text x="22" y="74" class="label">Operator intent</text>
+        <text x="22" y="103" class="small">outcome · constraints</text>
+        <text x="22" y="124" class="small">budget · authority</text>
+
+        <path d="M232 68 H276" stroke="#3d7b62" stroke-width="3"/>
+        <path d="M267 60 L278 68 L267 76" fill="none" stroke="#3d7b62" stroke-width="3"/>
+
+        <rect x="288" width="220" height="136" rx="20" class="card"/>
+        <text x="310" y="36" class="small mono">02 / COMPILE</text>
+        <text x="310" y="74" class="label">Bounded context</text>
+        <text x="310" y="103" class="small">repository graph</text>
+        <text x="310" y="124" class="small">impact envelope</text>
+
+        <path d="M520 68 H564" stroke="#3d7b62" stroke-width="3"/>
+        <path d="M555 60 L566 68 L555 76" fill="none" stroke="#3d7b62" stroke-width="3"/>
+
+        <rect x="576" width="220" height="136" rx="20" class="card"/>
+        <text x="598" y="36" class="small mono">03 / PLAN</text>
+        <text x="598" y="74" class="label">Plan tournament</text>
+        <text x="598" y="103" class="small">diverse approaches</text>
+        <text x="598" y="124" class="small">explicit tradeoffs</text>
+
+        <path d="M808 68 H852" stroke="#3d7b62" stroke-width="3"/>
+        <path d="M843 60 L854 68 L843 76" fill="none" stroke="#3d7b62" stroke-width="3"/>
+
+        <rect x="864" width="220" height="136" rx="20" fill="#0e2d20" stroke="#2c8f62" stroke-width="2"/>
+        <text x="886" y="36" fill="#73e6ad" class="mono" font-size="14">04 / ISOLATE</text>
+        <text x="886" y="74" class="label">Mission worktree</text>
+        <text x="886" y="103" class="small">bounded mutation</text>
+        <text x="886" y="124" class="small">checkpoints + budget</text>
+
+        <path d="M1096 68 H1140" stroke="#3d7b62" stroke-width="3"/>
+        <path d="M1131 60 L1142 68 L1131 76" fill="none" stroke="#3d7b62" stroke-width="3"/>
+
+        <rect x="1152" width="220" height="136" rx="20" class="card"/>
+        <text x="1174" y="36" class="small mono">05 / PROVE</text>
+        <text x="1174" y="74" class="label">Deterministic court</text>
+        <text x="1174" y="103" class="small">tests · review · replay</text>
+        <text x="1174" y="124" class="small">quarantine on doubt</text>
+
+        <g transform="translate(0 182)">
+          <rect width="1372" height="180" rx="22" fill="#091f17" stroke="#1b4535" stroke-width="2"/>
+          <text x="24" y="40" class="small mono">EVIDENCE LEDGER</text>
+          <line x1="24" y1="62" x2="1348" y2="62" stroke="#1d4938" stroke-width="2"/>
+
+          <g transform="translate(24 84)">
+            <circle cx="8" cy="8" r="8" fill="#34d399"/>
+            <text x="28" y="15" fill="#dffbed" font-size="16">source SHA bound</text>
+            <circle cx="235" cy="8" r="8" fill="#34d399"/>
+            <text x="255" y="15" fill="#dffbed" font-size="16">authority checked</text>
+            <circle cx="474" cy="8" r="8" fill="#34d399"/>
+            <text x="494" y="15" fill="#dffbed" font-size="16">proof reproducible</text>
+            <circle cx="730" cy="8" r="8" fill="#34d399"/>
+            <text x="750" y="15" fill="#dffbed" font-size="16">review independent</text>
+            <circle cx="982" cy="8" r="8" fill="#34d399"/>
+            <text x="1002" y="15" fill="#dffbed" font-size="16">recovery exact</text>
+          </g>
+
+          <rect x="24" y="126" width="958" height="34" rx="10" fill="#0c2a1e"/>
+          <rect x="24" y="126" width="768" height="34" rx="10" fill="url(#accent)" opacity=".86"/>
+          <text x="43" y="149" fill="#042015" class="mono" font-size="13" font-weight="800">MISSION EVIDENCE COMPLETE</text>
+
+          <rect x="1010" y="112" width="338" height="55" rx="14" fill="#0f3022" stroke="#39b87c" stroke-width="2"/>
+          <text x="1179" y="146" text-anchor="middle" fill="#7af0b5" font-size="17" font-weight="760">PATCH READY FOR HUMAN REVIEW</text>
+        </g>
+      </g>
+    </g>
+
+    <g transform="translate(88 786)">
+      <rect width="270" height="48" rx="24" fill="#0c271c" stroke="#245c45"/>
+      <circle cx="27" cy="24" r="7" fill="#34d399" filter="url(#glow)"/>
+      <text x="47" y="30" fill="#b7dac9" class="mono" font-size="14">NO SILENT INTEGRATION</text>
+
+      <rect x="290" width="258" height="48" rx="24" fill="#0c271c" stroke="#245c45"/>
+      <circle cx="317" cy="24" r="7" fill="#34d399"/>
+      <text x="337" y="30" fill="#b7dac9" class="mono" font-size="14">FAIL-CLOSED OUTCOMES</text>
+
+      <rect x="568" width="280" height="48" rx="24" fill="#0c271c" stroke="#245c45"/>
+      <circle cx="595" cy="24" r="7" fill="#34d399"/>
+      <text x="615" y="30" fill="#b7dac9" class="mono" font-size="14">PERMISSION-PRESERVING</text>
+
+      <text x="1424" y="30" text-anchor="end" fill="#587567" class="mono" font-size="13">ObtuseAI / Blunder</text>
+    </g>
+  </g>
+</svg>

@@ -1,0 +1,107 @@
+{
+  "schema": "blunder.constitution.v1",
+  "policyEpoch": "ccos-epoch-1",
+  "sourceRevision": "b473db2f1786efec1bb3c37a2861dd391b4e91eb",
+  "immutableDenials": [
+    "windows_permission_or_acl_bypass",
+    "secret_printing",
+    "live_benchmark_launch",
+    "destructive_filesystem_cleanup",
+    "git_push",
+    "safety_boundary_weakening",
+    "production_deploy",
+    "public_submission"
+  ],
+  "effects": {
+    "self-coding.launch": {
+      "scopes": ["bounded_self_coding"],
+      "approvals": ["operator-authorization"],
+      "alwaysDenied": false
+    },
+    "provider.call": {
+      "scopes": ["provider:model-use"],
+      "approvals": ["operator-provider-approval"],
+      "alwaysDenied": false
+    },
+    "source.mutate": {
+      "scopes": ["source:write-bounded"],
+      "approvals": ["intent-court", "verification-court", "independent-review"],
+      "alwaysDenied": false
+    },
+    "mission.integrate": {
+      "scopes": ["mission:integrate"],
+      "approvals": ["completed-mission", "exact-confirmation", "validated-patch"],
+      "alwaysDenied": false
+    },
+    "subprocess.start": {
+      "scopes": ["process:start-bounded"],
+      "approvals": [],
+      "alwaysDenied": false
+    },
+    "network.external": {
+      "scopes": ["network:external-bounded"],
+      "approvals": ["operator-network-approval"],
+      "alwaysDenied": false
+    },
+    "queue.mutate": {
+      "scopes": ["queue:write"],
+      "approvals": [],
+      "alwaysDenied": false
+    },
+    "worktree.create": {
+      "scopes": ["worktree:create"],
+      "approvals": [],
+      "alwaysDenied": false
+    },
+    "mission.cleanup": {
+      "scopes": ["mission:cleanup"],
+      "approvals": ["operator-cleanup-approval"],
+      "alwaysDenied": false
+    },
+    "git.commit": {
+      "scopes": ["git:commit"],
+      "approvals": ["operator-commit-approval"],
+      "alwaysDenied": false
+    },
+    "git.push": {
+      "scopes": ["git:push"],
+      "approvals": ["operator-push-approval"],
+      "alwaysDenied": true
+    },
+    "release.publish": {
+      "scopes": ["release:publish"],
+      "approvals": ["operator-publication-approval"],
+      "alwaysDenied": true
+    },
+    "deployment.production": {
+      "scopes": ["deployment:production"],
+      "approvals": ["operator-production-approval"],
+      "alwaysDenied": true
+    },
+    "benchmark.live-launch": {
+      "scopes": ["benchmark:live-launch"],
+      "approvals": ["operator-benchmark-approval"],
+      "alwaysDenied": true
+    },
+    "policy.root-mutate": {
+      "scopes": ["policy:root-mutate"],
+      "approvals": ["constitutional-amendment"],
+      "alwaysDenied": true
+    },
+    "credentials.reveal": {
+      "scopes": ["credentials:reveal"],
+      "approvals": [],
+      "alwaysDenied": true
+    },
+    "filesystem.destructive-cleanup": {
+      "scopes": ["filesystem:destructive-cleanup"],
+      "approvals": ["operator-destructive-cleanup-approval"],
+      "alwaysDenied": true
+    },
+    "permission.bypass": {
+      "scopes": ["permission:bypass"],
+      "approvals": [],
+      "alwaysDenied": true
+    }
+  }
+}

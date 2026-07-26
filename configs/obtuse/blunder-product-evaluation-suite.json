@@ -1,0 +1,65 @@
+{
+  "schema": "obtuse.blunder.product-evaluation-suite.v1",
+  "cases": [
+    {
+      "id": "mobile-onboarding-001",
+      "domain": "mobile",
+      "task": "Build a resilient accessible mobile onboarding journey with offline and permission-denied states.",
+      "requiredReports": ["blueprint", "visual", "device", "platform", "design", "assets", "polyglot"],
+      "minimumScore": 95,
+      "minimumJourneyCompletion": 0.95,
+      "maximumPerformanceMetric": 2500,
+      "maximumOperatorInterventions": 1,
+      "maximumSeconds": 1800,
+      "maximumCostUsd": 2.0
+    },
+    {
+      "id": "web-production-001",
+      "domain": "web",
+      "task": "Build a production-grade responsive website with metadata, accessibility, resilience, and Core Web Vitals proof.",
+      "requiredReports": ["blueprint", "visual", "device", "platform", "design", "assets", "polyglot"],
+      "minimumScore": 95,
+      "minimumJourneyCompletion": 0.98,
+      "maximumPerformanceMetric": 2500,
+      "maximumOperatorInterventions": 1,
+      "maximumSeconds": 1800,
+      "maximumCostUsd": 2.0
+    },
+    {
+      "id": "game-loop-001",
+      "domain": "game",
+      "task": "Build a deterministic playable loop with input, replay, frame-time, recovery, and export proof.",
+      "requiredReports": ["blueprint", "visual", "device", "platform", "design", "assets", "polyglot"],
+      "minimumScore": 95,
+      "minimumJourneyCompletion": 0.95,
+      "maximumPerformanceMetric": 16.67,
+      "maximumOperatorInterventions": 1,
+      "maximumSeconds": 2400,
+      "maximumCostUsd": 3.0
+    },
+    {
+      "id": "design-system-001",
+      "domain": "ui-ux",
+      "task": "Create a cohesive responsive design system whose complete interaction states pass visual and accessibility proof.",
+      "requiredReports": ["blueprint", "visual", "device", "design", "assets"],
+      "minimumScore": 95,
+      "minimumJourneyCompletion": 1.0,
+      "maximumPerformanceMetric": 200,
+      "maximumOperatorInterventions": 1,
+      "maximumSeconds": 1200,
+      "maximumCostUsd": 1.5
+    },
+    {
+      "id": "cross-platform-coherence-001",
+      "domain": "cross-platform",
+      "task": "Deliver one coherent product contract across web, mobile, and desktop breakpoints without hiding platform-specific behavior.",
+      "requiredReports": ["blueprint", "visual", "device", "platform", "design", "assets", "polyglot"],
+      "minimumScore": 97,
+      "minimumJourneyCompletion": 0.98,
+      "maximumPerformanceMetric": 2500,
+      "maximumOperatorInterventions": 1,
+      "maximumSeconds": 3000,
+      "maximumCostUsd": 4.0
+    }
+  ]
+}

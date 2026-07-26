@@ -1,0 +1,105 @@
+{
+  "schema": "obtuse.blunder.capability-plugin.v1",
+  "id": "quality",
+  "name": "Blunder Quality and Security",
+  "version": "2.0.0",
+  "description": "Fail-closed readiness, security boundary, regression, and recovery workflows.",
+  "firstParty": true,
+  "enabled": true,
+  "tools": [
+    {
+      "id": "readiness-gate",
+      "name": "Capability Readiness Gate",
+      "description": "Run the canonical 184-point S-tier capability, repair, autonomy, and safety audit.",
+      "permissions": ["source:read", "artifact:write"],
+      "actionId": "readiness",
+      "mutatesSource": false,
+      "providerRequired": false
+    },
+    {
+      "id": "regression-suite",
+      "name": "Regression Suite",
+      "description": "Run native integration and boundary tests.",
+      "permissions": ["source:read", "tests:run"],
+      "actionId": "tests",
+      "mutatesSource": false,
+      "providerRequired": false
+    },
+    {
+      "id": "checkpoint-review",
+      "name": "Checkpoint Review",
+      "description": "Inspect hash-guarded mutation checkpoints and drift status.",
+      "permissions": ["checkpoint:read", "source:read"],
+      "actionId": null,
+      "mutatesSource": false,
+      "providerRequired": false
+    },
+    {
+      "id": "evaluation-arena",
+      "name": "Agent Evaluation Arena",
+      "description": "Score correctness, false accepts, intervention, and cost without fabricated competitor data.",
+      "permissions": ["artifact:read", "source:read"],
+      "actionId": null,
+      "mutatesSource": false,
+      "providerRequired": false
+    },
+    {
+      "id": "reliability-campaign",
+      "name": "Reliability Campaign",
+      "description": "Exercise live health gates and deterministic crash, truncation, identity, and budget faults.",
+      "permissions": ["runtime:read", "queue:read", "artifact:write"],
+      "actionId": null,
+      "mutatesSource": false,
+      "providerRequired": false
+    },
+    {
+      "id": "private-release-governance",
+      "name": "Private Release Governance",
+      "description": "Bind an exact commit, tree, schemas, checks, proof, and signature before operator confirmation.",
+      "permissions": ["source:read", "artifact:read", "artifact:write"],
+      "actionId": null,
+      "mutatesSource": false,
+      "providerRequired": false
+    }
+  ],
+  "skills": [
+    {
+      "id": "secure-review",
+      "name": "Secure Boundary Review",
+      "description": "Review input, permission, secret, process, and mutation boundaries using concrete paths.",
+      "triggers": ["security", "secure", "permission", "secret", "boundary", "vulnerability"],
+      "workflow": ["Map trust boundaries", "Trace untrusted inputs", "Verify permission ceilings", "Run secret readiness", "Validate repair"],
+      "tools": ["readiness-gate", "regression-suite", "checkpoint-review"],
+      "contextMode": "isolated",
+      "sideEffects": false
+    },
+    {
+      "id": "release-readiness",
+      "name": "Release Readiness",
+      "description": "Build an evidence-backed ship or stop decision without relaxing gates.",
+      "triggers": ["ready", "release", "ship", "publish", "commit", "private", "github"],
+      "workflow": ["Inspect candidate scope", "Run regression", "Run capability readiness", "Verify the safety boundary", "Report blockers first"],
+      "tools": ["readiness-gate", "regression-suite", "evaluation-arena", "reliability-campaign", "private-release-governance"],
+      "contextMode": "on-demand",
+      "sideEffects": false
+    },
+    {
+      "id": "recovery-audit",
+      "name": "Recovery Audit",
+      "description": "Prove rollback material, file drift, and terminal evidence are complete before mutation.",
+      "triggers": ["rollback", "restore", "recover", "checkpoint", "drift", "undo"],
+      "workflow": ["Inspect checkpoint hashes", "Detect drift", "Verify every snapshot", "Require exact confirmation", "Record restore evidence"],
+      "tools": ["checkpoint-review", "regression-suite"],
+      "contextMode": "on-demand",
+      "sideEffects": false
+    }
+  ],
+  "hooks": [
+    {
+      "id": "restore-audit-journal",
+      "event": "checkpoint.restored",
+      "action": "audit.record",
+      "description": "Record every checkpoint restore and its bounded file list."
+    }
+  ]
+}

@@ -1,0 +1,147 @@
+:root {
+  font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+  color: #19201d;
+  background: #eff2ef;
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+}
+
+* { box-sizing: border-box; }
+body { margin: 0; min-width: 1080px; min-height: 700px; }
+button, textarea { font: inherit; }
+button { color: inherit; }
+
+.app-shell {
+  display: grid;
+  grid-template: 64px minmax(0, 1fr) / 180px minmax(480px, 1fr) 360px;
+  min-height: 100vh;
+  background: radial-gradient(circle at 65% 0%, #f8faf8 0, #eff2ef 46%, #e8ece8 100%);
+}
+
+.topbar {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0 22px;
+  border-bottom: 1px solid #d8ded9;
+  background: rgba(249, 251, 249, 0.86);
+  backdrop-filter: blur(18px);
+}
+
+.brand-mark {
+  display: grid;
+  width: 34px;
+  height: 34px;
+  place-items: center;
+  border-radius: 11px;
+  color: white;
+  background: #1d4938;
+  font-weight: 750;
+}
+
+.topbar strong, .topbar span { display: block; }
+.topbar span { color: #6b746f; font-size: 12px; }
+.topbar-status { margin-left: auto; display: flex; align-items: center; gap: 7px; font-size: 13px; }
+.status-pulse { width: 8px; height: 8px; border-radius: 50%; background: #3c9d70; box-shadow: 0 0 0 4px #dff2e7; }
+
+.sidebar {
+  padding: 18px 12px;
+  border-right: 1px solid #d8ded9;
+  background: rgba(244, 247, 244, 0.72);
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar nav { display: grid; gap: 5px; }
+.sidebar nav button {
+  display: flex;
+  justify-content: space-between;
+  border: 0;
+  border-radius: 10px;
+  padding: 10px 12px;
+  background: transparent;
+  text-align: left;
+  cursor: pointer;
+}
+.sidebar nav button:hover { background: #e6ebe7; }
+.sidebar nav button.active { background: #dae5de; color: #163f30; font-weight: 650; }
+.badge { min-width: 20px; padding: 1px 6px; border-radius: 10px; color: white; background: #1d4938; text-align: center; font-size: 11px; }
+
+.boundary-card { margin-top: auto; padding: 12px; border: 1px solid #d7dfd9; border-radius: 12px; background: rgba(255,255,255,.64); }
+.boundary-card strong, .boundary-card small { display: block; margin-top: 5px; }
+.boundary-card small { color: #717a74; line-height: 1.4; }
+
+.workspace { padding: 34px clamp(24px, 4vw, 64px); overflow: auto; }
+.workspace-heading { display: flex; align-items: flex-start; justify-content: space-between; gap: 20px; }
+.workspace h1 { margin: 7px 0 26px; font-size: clamp(26px, 3vw, 40px); letter-spacing: -0.04em; font-weight: 680; }
+.eyebrow { color: #68736c; font-size: 11px; font-weight: 700; letter-spacing: .12em; text-transform: uppercase; }
+.revision { padding: 6px 9px; border: 1px solid #d8ded9; border-radius: 8px; color: #68736c; background: #f8faf8; font-size: 11px; }
+
+.composer { border: 1px solid #cfd8d1; border-radius: 18px; background: rgba(255,255,255,.86); box-shadow: 0 14px 36px rgba(34,58,47,.08); overflow: hidden; }
+.composer textarea { width: 100%; min-height: 120px; padding: 20px; border: 0; outline: 0; resize: vertical; color: #17201b; background: transparent; font-size: 17px; line-height: 1.5; }
+.composer-footer { display: flex; align-items: center; justify-content: space-between; gap: 12px; padding: 12px 14px; border-top: 1px solid #e3e7e4; color: #737c76; font-size: 12px; }
+
+.primary, .quiet { border: 0; border-radius: 10px; padding: 9px 14px; cursor: pointer; }
+.primary { color: white; background: #1d4938; font-weight: 650; }
+.primary:hover { background: #153b2d; }
+.primary:disabled, .quiet:disabled { cursor: not-allowed; opacity: .45; }
+.quiet { border: 1px solid #d4dbd6; background: #f7f9f7; }
+.danger { color: #8f332c; }
+.button-row { display: flex; flex-wrap: wrap; gap: 8px; }
+
+.error-banner { margin-top: 16px; padding: 12px 14px; border: 1px solid #e3b7b2; border-radius: 12px; color: #7d2d27; background: #fff0ee; }
+.task-list { display: grid; gap: 9px; margin-top: 24px; }
+.promotion-library { display: grid; gap: 10px; margin-top: 24px; }
+.promotion-summary { display: grid; grid-template-columns: repeat(3, 1fr); gap: 10px; }
+.promotion-summary div, .promotion-record { padding: 14px; border: 1px solid #d7dfd9; border-radius: 12px; background: rgba(255,255,255,.64); }
+.promotion-summary strong { display: block; margin-top: 6px; font-size: 1.15rem; }
+.promotion-record { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+.promotion-record h3 { margin: 5px 0; font-size: .98rem; }
+.promotion-record code { color: #717a74; font-size: .72rem; }
+.promotion-pass, .promotion-blocked { flex: 0 0 auto; padding: 6px 9px; border-radius: 999px; font-size: .72rem; font-weight: 700; }
+.promotion-pass { color: #1f6e48; background: #dff3e8; }
+.promotion-blocked { color: #8a4c1d; background: #f9eadc; }
+.task-card { width: 100%; display: grid; grid-template-columns: 10px minmax(0, 1fr) auto; align-items: center; gap: 12px; padding: 13px 15px; border: 1px solid #d8ded9; border-radius: 13px; background: rgba(255,255,255,.66); text-align: left; cursor: pointer; }
+.task-card:hover { border-color: #b7c7bb; background: rgba(255,255,255,.92); }
+.task-card-copy { min-width: 0; }
+.task-card strong, .task-card small { display: block; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.task-card small, .task-card time { margin-top: 4px; color: #747d77; font-size: 11px; }
+.state-dot { width: 8px; height: 8px; border-radius: 50%; background: #87918a; }
+.state-needs_approval { background: #d49135; }
+.state-blocked { background: #c4564c; }
+.state-ready_for_review { background: #3a966c; }
+.state-cancelled { background: #9ba29d; }
+.empty-state, .empty-evidence { color: #7a837d; }
+
+.evidence-drawer { padding: 28px 24px; border-left: 1px solid #d8ded9; background: rgba(249,251,249,.82); overflow: auto; }
+.evidence-drawer h2 { margin: 7px 0 10px; font-size: 21px; line-height: 1.25; letter-spacing: -.02em; }
+.evidence-drawer > p { color: #626c65; line-height: 1.5; }
+.evidence-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; margin: 20px 0; }
+.evidence-grid div { padding: 10px; border: 1px solid #dfe4e0; border-radius: 10px; background: #f9faf9; }
+.evidence-grid dt { color: #7a837d; font-size: 10px; text-transform: uppercase; }
+.evidence-grid dd { margin: 4px 0 0; font-size: 13px; font-weight: 650; }
+.evidence-section { margin: 20px 0; }
+.evidence-section h3, .approval-panel h3 { margin: 0 0 8px; font-size: 13px; }
+.evidence-section ul { margin: 0; padding-left: 18px; color: #666f69; font-size: 12px; line-height: 1.5; }
+.agent-list { display: flex; flex-wrap: wrap; gap: 6px; }
+.agent-list span { padding: 5px 8px; border-radius: 8px; color: #436052; background: #e6eee9; font-size: 11px; }
+.approval-panel { margin: 20px 0; padding: 14px; border: 1px solid #e4c898; border-radius: 12px; background: #fff8e9; }
+.approval-panel h3 { margin-top: 5px; text-transform: capitalize; }
+.approval-panel p { color: #6f6048; font-size: 12px; line-height: 1.5; }
+.evidence-section code { display: block; padding: 9px; border-radius: 8px; background: #e9edea; font-size: 11px; }
+.event-strip { display: grid; gap: 5px; margin-top: 24px; padding-top: 18px; border-top: 1px solid #dde3de; color: #747d77; }
+
+@media (prefers-color-scheme: dark) {
+  :root { color: #e7eee9; background: #141a17; }
+  .app-shell { background: radial-gradient(circle at 65% 0%, #202925 0, #161d19 48%, #111613 100%); }
+  .topbar, .sidebar, .evidence-drawer { background: rgba(21,28,24,.9); border-color: #303a34; }
+  .sidebar nav button:hover, .sidebar nav button.active { background: #26332c; color: #bde0cb; }
+  .boundary-card, .composer, .task-card, .evidence-grid div, .promotion-summary div, .promotion-record { background: rgba(30,39,34,.86); border-color: #344139; }
+  .task-card:hover { background: #25302a; border-color: #52665a; }
+  .composer textarea { color: #eef3ef; }
+  .composer-footer, .revision { border-color: #344139; background: #202824; }
+  .quiet { color: #dbe5de; background: #252e29; border-color: #3b4840; }
+  .agent-list span { color: #bbd5c5; background: #293a31; }
+  .evidence-section code { background: #252e29; }
+}

@@ -1,0 +1,31 @@
+{
+  "schema": "obtuse.blunder.project-policy.v1",
+  "projectId": "blunder-private",
+  "allowedRoots": [
+    "."
+  ],
+  "protectedPaths": [
+    ".git",
+    ".env",
+    "artifacts/obtuse/blunder-ccos-runtime-v1"
+  ],
+  "allowedCommands": [
+    ["python", "-m", "compileall", "-q", "blunder"],
+    ["python", "-m", "unittest", "discover", "-s", "tests"],
+    ["node", "--check", "blunder/shell/static/app.js"]
+  ],
+  "provider": {
+    "enabled": false,
+    "allowedProviders": [],
+    "allowedDataClasses": [
+      "public-source",
+      "project-source-redacted"
+    ],
+    "maximumCostPerTaskUsd": 0.0,
+    "maximumCostPerDayUsd": 0.0,
+    "maximumCallsPerTask": 0,
+    "credentialReference": null
+  },
+  "previewAllowed": true,
+  "externalDeploymentAllowed": false
+}

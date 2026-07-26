@@ -1,0 +1,11 @@
+{
+  "schema": "obtuse.blunder.mission-branch-config.v1",
+  "repositoryRoot": "C:\\path\\to\\blunder",
+  "workspaceRoot": "C:\\path\\to\\blunder-mission-worktrees",
+  "maxParallel": 3,
+  "maxMissionSeconds": 1800,
+  "maxProviderCalls": 3,
+  "maxTokens": 200000,
+  "maxCostUsd": 5.0,
+  "retentionDays": 14
+}

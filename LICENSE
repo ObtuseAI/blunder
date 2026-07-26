@@ -1,0 +1,65 @@
+ObtuseAI Source-Available License 1.0
+
+Copyright (c) 2026 ObtuseAI. All rights reserved.
+
+This license applies to Blunder and its associated source code,
+documentation, specifications, and repository-owned assets (the "Software").
+
+1. Evaluation permission
+
+Subject to this license, ObtuseAI grants you a personal, limited,
+non-exclusive, non-transferable, revocable right to view, clone, compile, and
+run the Software solely for non-commercial evaluation, education, research,
+security review, and portfolio review.
+
+2. Restrictions
+
+You may not, without prior written permission from ObtuseAI:
+
+- use the Software in production or to provide a hosted or managed service;
+- use the Software for a commercial purpose or internal commercial operation;
+- redistribute, sublicense, sell, lease, publish a modified distribution, or
+  create a competing product or service from the Software;
+- remove or alter copyright, attribution, provenance, or license notices;
+- use ObtuseAI names, marks, or product identities to imply endorsement; or
+- bypass, weaken, or remove the Software's authority, safety, evidence,
+  validation, review, or recovery boundaries.
+
+GitHub platform operations that are technically necessary to view, privately
+evaluate, or propose a contribution to this repository are permitted, but do
+not grant redistribution or relicensing rights.
+
+3. Contributions
+
+Unless a separate written agreement applies, a submitted contribution grants
+ObtuseAI a perpetual, worldwide, royalty-free right to use, modify,
+redistribute, sublicense, and commercialize that contribution as part of the
+Software. You represent that you have the right to grant those permissions.
+
+4. Third-party materials
+
+Third-party components remain governed by their own licenses. This license
+does not grant rights to third-party software, models, data, content, or marks.
+
+5. No patent or trademark license
+
+No patent or trademark license is granted except to the minimum extent
+required to exercise the evaluation permission in Section 1.
+
+6. Termination
+
+Your rights terminate automatically if you violate this license. On
+termination, you must stop using the Software and delete copies under your
+control, except copies retained solely where applicable law requires them.
+
+7. Disclaimer
+
+THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+IMPLIED, INCLUDING WARRANTIES OF MERCHANTABILITY, FITNESS FOR A PARTICULAR
+PURPOSE, TITLE, AND NON-INFRINGEMENT. IN NO EVENT SHALL THE AUTHORS OR
+COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES, OR OTHER LIABILITY,
+WHETHER IN CONTRACT, TORT, OR OTHERWISE, ARISING FROM, OUT OF, OR IN
+CONNECTION WITH THE SOFTWARE OR ITS USE.
+
+For commercial, production, hosted-service, redistribution, or other rights,
+contact ObtuseAI through the repository owner's verified GitHub profile.

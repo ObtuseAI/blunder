@@ -1,0 +1,24 @@
+{
+  "schema": "obtuse.blunder.ccos-runtime-config.v1",
+  "artifactRoot": "artifacts/obtuse/blunder-ccos-runtime-v1",
+  "maximumRecordBytes": 262144,
+  "maximumRecords": 10000,
+  "lockTimeoutSeconds": 5,
+  "staleLockSeconds": 60,
+  "retentionDays": {
+    "genome": 3650,
+    "evaluation": 3650,
+    "memory": 3650,
+    "lineage": 3650,
+    "observatory": 3650,
+    "quarantine": 3650,
+    "recovery": 3650,
+    "canary": 90
+  },
+  "authority": {
+    "providerCallsAllowed": false,
+    "automaticActivationAllowed": false,
+    "federationAllowed": false,
+    "metaEvolutionAllowed": false
+  }
+}

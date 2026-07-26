@@ -1,0 +1,619 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="color-scheme" content="dark">
+    <title>Blunder — Focus Shell</title>
+    <link rel="stylesheet" href="/styles.css">
+  </head>
+  <body>
+    <div class="noise" aria-hidden="true"></div>
+    <div class="shell">
+      <header class="topbar">
+        <button class="brand" type="button" data-view-target="work" aria-label="Blunder home">
+          <span class="brand-mark" aria-hidden="true"><i></i><i></i><i></i></span>
+          <span><strong>BLUNDER</strong><small>FOCUS SHELL</small></span>
+        </button>
+        <nav class="nav" aria-label="Primary">
+          <button class="nav-item active" type="button" data-view-target="work">Work</button>
+          <button class="nav-item" type="button" data-view-target="evolve">Evolve</button>
+          <button class="nav-item" type="button" data-view-target="capabilities">Capabilities</button>
+          <button class="nav-item" type="button" data-view-target="missions">Missions</button>
+          <button class="nav-item" type="button" data-view-target="frontier">Frontier</button>
+          <button class="nav-item" type="button" data-view-target="product">Studio</button>
+          <button class="nav-item" type="button" data-view-target="creation">Create</button>
+          <button class="nav-item" type="button" data-view-target="kernel">Kernel</button>
+          <button class="nav-item" type="button" data-view-target="files">Files</button>
+        </nav>
+        <div class="top-actions">
+          <span class="privacy-pill"><span class="dot"></span>Native · Private</span>
+          <button class="icon-button" id="refreshButton" type="button" aria-label="Refresh workspace" title="Refresh workspace">↻</button>
+          <button class="command-button" id="commandButton" type="button"><span>Command</span><kbd>Ctrl K</kbd></button>
+        </div>
+      </header>
+
+      <main class="workspace">
+        <aside class="left-rail">
+          <section class="rail-section">
+            <div class="section-label">Proof controls</div>
+            <button class="rail-action" type="button" data-action="planning_gate">
+              <span class="rail-icon lime">✓</span><span><strong>Planning gate</strong><small>No provider · no launch</small></span>
+            </button>
+            <button class="rail-action" type="button" data-action="tests">
+              <span class="rail-icon blue">◇</span><span><strong>Safety tests</strong><small>Integration baseline</small></span>
+            </button>
+            <button class="rail-action" type="button" data-action="status">
+              <span class="rail-icon amber">↻</span><span><strong>Refresh state</strong><small>Queue · evolution · runtime</small></span>
+            </button>
+          </section>
+
+          <section class="rail-section context-section">
+            <div class="section-label">Current context</div>
+            <button class="context-chip active" type="button" data-view-target="work"><span>01</span>Workspace</button>
+            <button class="context-chip" type="button" data-view-target="evolve"><span>02</span>Evolution loop</button>
+            <button class="context-chip" type="button" data-view-target="capabilities"><span>03</span>Capability foundry</button>
+            <button class="context-chip" type="button" data-view-target="missions"><span>04</span>Mission control</button>
+            <button class="context-chip" type="button" data-view-target="frontier"><span>05</span>Frontier workbench</button>
+            <button class="context-chip" type="button" data-view-target="product"><span>06</span>Product studio</button>
+            <button class="context-chip" type="button" data-view-target="creation"><span>07</span>Creation forge</button>
+            <button class="context-chip" type="button" data-view-target="kernel"><span>08</span>Quorum kernel</button>
+            <button class="context-chip" type="button" data-view-target="files"><span>09</span>Source intelligence</button>
+          </section>
+
+          <section class="rail-section safety-card">
+            <div class="safety-head"><span class="shield">◆</span><strong>Hard boundaries</strong></div>
+            <ul>
+              <li><span></span>No benchmark launch</li>
+              <li><span></span>No destructive actions</li>
+              <li><span></span>Snapshot before mutation</li>
+              <li><span></span>Promotion stays gated</li>
+            </ul>
+          </section>
+
+          <div class="rail-footer">
+            <span class="connection-dot"></span>
+            <span><strong id="connectionLabel">Connecting</strong><small>Native core · local only</small></span>
+          </div>
+        </aside>
+
+        <section class="stage">
+          <div class="view active" id="view-work" data-view="work">
+            <div class="hero-row">
+              <div>
+                <p class="eyebrow">The native agent workspace</p>
+                <h1>What should Blunder<br><em>improve next?</em></h1>
+                <p class="hero-copy">Describe the outcome. Blunder brings the workspace, proof gates, evolution history, rollback, and validation into one loop.</p>
+              </div>
+              <div class="orbit" aria-hidden="true">
+                <span class="orbit-core">B</span><i class="orbit-one"></i><i class="orbit-two"></i><i class="orbit-three"></i>
+              </div>
+            </div>
+
+            <section class="composer" aria-labelledby="composerTitle">
+              <div class="composer-top">
+                <span class="mode-badge">BLUNDER · NATIVE</span>
+                <span class="model-label" id="modelLabel">openrouter/z-ai/glm-5.2</span>
+              </div>
+              <label class="sr-only" id="composerTitle" for="taskInput">Task for Blunder</label>
+              <textarea id="taskInput" maxlength="4000" placeholder="Build, repair, inspect, or improve something concrete…"></textarea>
+              <div class="composer-bottom">
+                <label class="approval-toggle">
+                  <input id="providerApproval" type="checkbox">
+                  <span class="toggle-track"><span></span></span>
+                  <span><strong>Native model task</strong><small>Explicitly allow one bounded change set</small></span>
+                </label>
+                <div class="composer-actions">
+                  <span class="hint">⌘ Enter to run</span>
+                <button class="primary-button" id="runTaskButton" type="button"><span>Build with proof</span><b>→</b></button>
+                </div>
+              </div>
+            </section>
+
+            <section class="briefing-panel" id="taskBriefingPanel">
+              <div class="panel-head">
+                <div><p class="eyebrow">Intent preflight</p><h2>Context Forge</h2></div>
+                <button class="outline-button" id="briefTaskButton" type="button">Build briefing</button>
+              </div>
+              <div class="briefing-empty" id="briefingEmpty">Map the likely source, context load, mutation ceiling, and recovery contract before spending a provider call.</div>
+              <div class="briefing-content hidden" id="briefingContent">
+                <div class="briefing-stats">
+                  <article><span>Evidence</span><strong id="briefingSources">—</strong><small>ranked source files</small></article>
+                  <article><span>Context</span><strong id="briefingContext">—</strong><small id="briefingBytes">local bytes</small></article>
+                  <article><span>Mutation ceiling</span><strong id="briefingFiles">—</strong><small>snapshot enforced</small></article>
+                  <article><span>Provider spent</span><strong>0</strong><small>before approval</small></article>
+                </div>
+                <div class="briefing-grid"><div id="briefingGates" class="gate-list"></div><div id="briefingEvidence" class="evidence-list"></div></div>
+              </div>
+            </section>
+
+            <div class="metrics-grid">
+              <article class="metric-card">
+                <div class="metric-top"><span>Planning quality</span><span class="metric-icon lime">✓</span></div>
+                <strong id="planningScore">—</strong>
+                <small id="planningVerdict">Waiting for state</small>
+                <div class="meter"><i id="planningMeter"></i></div>
+              </article>
+              <article class="metric-card">
+                <div class="metric-top"><span>Evolution pressure</span><span class="metric-icon blue">↗</span></div>
+                <strong id="pressureScore">—</strong>
+                <small id="selectedFamily">No plan loaded</small>
+                <div class="meter blue-meter"><i id="pressureMeter"></i></div>
+              </article>
+              <article class="metric-card">
+                <div class="metric-top"><span>Candidate budget</span><span class="metric-icon amber">◎</span></div>
+                <strong id="candidateBudget">—</strong>
+                <small>Adaptive · operator-capped</small>
+                <div class="meter amber-meter"><i id="budgetMeter"></i></div>
+              </article>
+              <article class="metric-card">
+                <div class="metric-top"><span>Champion floor</span><span class="metric-icon violet">◆</span></div>
+                <strong id="championScore">—</strong>
+                <small>Non-regression protected</small>
+                <div class="meter violet-meter"><i id="championMeter"></i></div>
+              </article>
+            </div>
+
+            <section class="activity-panel">
+              <div class="panel-head">
+                <div><p class="eyebrow">Live activity</p><h2>One loop, visible proof</h2></div>
+                <button class="ghost-button hidden" id="stopJobButton" type="button">Stop</button>
+              </div>
+              <div class="empty-activity" id="emptyActivity">
+                <span class="empty-glyph">⌁</span>
+                <div><strong>Ready for a bounded task</strong><small>Run a proof action or describe work above. Output stays local and redacted.</small></div>
+              </div>
+              <div class="job-view hidden" id="jobView">
+                <div class="job-status-row"><span id="jobStatus" class="status-chip">Queued</span><span id="jobLabel">Blunder task</span><time id="jobTime"></time></div>
+                <pre id="jobOutput" aria-live="polite"></pre>
+              </div>
+            </section>
+          </div>
+
+          <div class="view capabilities-view" id="view-capabilities" data-view="capabilities">
+            <div class="view-heading">
+              <div><p class="eyebrow">First-party extension fabric</p><h1>More capability.<br><em>Less context noise.</em></h1></div>
+              <span class="advisory-badge">Blunder native only</span>
+            </div>
+            <div class="capability-counts">
+              <article><span>Plugins</span><strong id="pluginCount">—</strong><small>sealed first-party packs</small></article>
+              <article><span>Skills</span><strong id="skillCount">—</strong><small>loaded on demand</small></article>
+              <article><span>Tools</span><strong id="toolCount">—</strong><small>deferred schemas</small></article>
+              <article><span>Hooks</span><strong id="hookCount">—</strong><small>deterministic events</small></article>
+            </div>
+            <section class="capability-router">
+              <div class="panel-head"><div><p class="eyebrow">Intent router</p><h2>Assemble the smallest elite stack</h2></div><span class="status-chip good">Zero provider</span></div>
+              <div class="capability-input-row">
+                <input id="capabilityTaskInput" type="text" maxlength="4000" placeholder="Describe what Blunder must accomplish…" autocomplete="off">
+                <button class="primary-button" id="routeCapabilitiesButton" type="button"><span>Route capability</span><b>→</b></button>
+              </div>
+              <div class="capability-route hidden" id="capabilityRoute">
+                <div><p class="route-label">Selected skills</p><div id="routedSkills" class="routed-skills"></div></div>
+                <div><p class="route-label">Tool chain</p><div id="routedTools" class="routed-tools"></div></div>
+                <div class="permission-strip"><span>Permission envelope</span><p id="routedPermissions"></p></div>
+              </div>
+            </section>
+            <section class="plugin-section">
+              <div class="panel-head"><div><p class="eyebrow">Installed capability packs</p><h2>Integrity-bound Blunder fabric</h2></div><span class="subtle-label">No external plugins · no arbitrary commands</span></div>
+              <div id="pluginGrid" class="plugin-grid"></div>
+            </section>
+          </div>
+
+          <div class="view missions-view" id="view-missions" data-view="missions">
+            <div class="view-heading">
+              <div><p class="eyebrow">Persistent mission control</p><h1>Every action visible.<br><em>Every change reversible.</em></h1></div>
+              <button class="outline-button" id="refreshMissionsButton" type="button">Refresh deck</button>
+            </div>
+            <section class="session-strip" id="missionSessions"><p>Loading live sessions…</p></section>
+            <section class="fabric-console">
+              <div class="panel-head">
+                <div><p class="eyebrow">Mission Fabric v2</p><h2>Plan the graph. Parallelize the proof.</h2></div>
+                <span class="capacity-badge" id="fabricSecurityState">Sandbox loading</span>
+              </div>
+              <div class="fabric-metrics">
+                <article><span>Repository graph</span><strong id="intelligenceFileCount">—</strong><small id="intelligenceSymbolCount">indexed files</small></article>
+                <article><span>Outcome learning</span><strong id="learningOutcomeCount">—</strong><small id="learningAverageScore">no outcomes yet</small></article>
+                <article><span>Execution boundary</span><strong>Closed</strong><small>no secrets · loopback only</small></article>
+                <article><span>Reviewer</span><strong>Independent</strong><small>read-only · rejection capable</small></article>
+              </div>
+              <textarea id="missionProgramTask" maxlength="2500" placeholder="Describe one outcome that can be decomposed into parallel, non-overlapping specialist work..."></textarea>
+              <div class="fabric-actions">
+                <label class="approval-toggle compact-toggle">
+                  <input id="missionProgramApproval" type="checkbox">
+                  <span class="toggle-track"><span></span></span>
+                  <span><strong>Approve specialist models</strong><small>Hard time, token, call, and cost budgets</small></span>
+                </label>
+                <button class="outline-button" id="previewMissionProgramButton" type="button">Preview DAG</button>
+                <button class="primary-button" id="launchMissionProgramButton" type="button"><span>Launch fabric</span><b>→</b></button>
+              </div>
+              <div class="program-list" id="missionProgramList"><p class="empty-copy">No mission programs yet.</p></div>
+            </section>
+            <section class="branch-forge">
+              <div class="panel-head">
+                <div><p class="eyebrow">Isolated execution fabric</p><h2>Mission branches</h2></div>
+                <span class="capacity-badge" id="missionBranchCapacity">0 / 3 active</span>
+              </div>
+              <p class="branch-forge-copy">Spawn up to three first-party coding agents. Each receives its own process, context, Git branch, and worktree; the primary review tree stays untouched.</p>
+              <div class="branch-composer">
+                <textarea id="missionBranchTask" maxlength="2500" placeholder="Give one branch a concrete, independently reviewable coding outcome..."></textarea>
+                <div class="branch-composer-actions">
+                  <label class="approval-toggle compact-toggle">
+                    <input id="missionBranchApproval" type="checkbox">
+                    <span class="toggle-track"><span></span></span>
+                    <span><strong>Approve native model</strong><small>Strategy · implementation · independent review</small></span>
+                  </label>
+                  <button class="primary-button" id="spawnMissionBranchButton" type="button"><span>Spawn branch</span><b>+</b></button>
+                </div>
+              </div>
+              <div class="mission-branch-list" id="missionBranchList"><p class="empty-copy">Loading isolated mission capacity...</p></div>
+            </section>
+            <div class="mission-grid">
+              <section class="mission-panel">
+                <div class="panel-head"><div><p class="eyebrow">Durable timeline</p><h2>Recent missions</h2></div></div>
+                <div class="mission-list" id="missionHistory"></div>
+              </section>
+              <section class="mission-panel">
+                <div class="panel-head"><div><p class="eyebrow">Hash-guarded recovery</p><h2>Checkpoints</h2></div></div>
+                <div class="checkpoint-list" id="checkpointList"></div>
+              </section>
+            </div>
+            <section class="checkpoint-detail hidden" id="missionBranchDetail">
+              <div class="panel-head"><div><p class="eyebrow">Mission-only integration patch</p><h2 id="missionBranchDetailTitle">Mission branch</h2></div><span class="status-chip" id="missionBranchIntegrationState">Pending</span></div>
+              <pre id="missionBranchPatch">The branch has not produced a patch yet.</pre>
+              <p class="restore-note" id="missionBranchCompatibility">Integration remains review-only until every changed path matches the seeded primary state.</p>
+              <div class="restore-row">
+                <input id="missionBranchIntegrationConfirmation" type="text" autocomplete="off" placeholder="Exact integration phrase">
+                <button class="primary-button" id="integrateMissionBranchButton" type="button">Apply to review tree</button>
+              </div>
+              <div class="branch-lifecycle-actions">
+                <button class="outline-button" id="reconcileMissionBranchButton" type="button">Three-way reconcile</button>
+                <button class="danger-button" id="cleanupMissionBranchButton" type="button">Clean worktree</button>
+                <select id="missionOutcomeStatus" aria-label="Mission outcome"><option value="accepted">Accepted</option><option value="reverted">Reverted</option><option value="rejected">Rejected</option></select>
+                <select id="missionOutcomeScore" aria-label="Outcome score"><option value="5">5 · exceptional</option><option value="4">4 · strong</option><option value="3">3 · neutral</option><option value="2">2 · weak</option><option value="1">1 · failed</option></select>
+                <button class="outline-button" id="recordMissionOutcomeButton" type="button">Record outcome</button>
+              </div>
+              <p class="restore-note">This applies only the mission patch. It does not commit, push, or remove the worktree.</p>
+            </section>
+            <section class="checkpoint-detail hidden" id="checkpointDetail">
+              <div class="panel-head"><div><p class="eyebrow">Change lens</p><h2 id="checkpointTitle">Checkpoint</h2></div><span class="status-chip" id="checkpointState">Review</span></div>
+              <pre id="checkpointDiff"></pre>
+              <div class="restore-row">
+                <input id="restoreConfirmation" type="text" autocomplete="off" placeholder="Exact restore phrase">
+                <button class="danger-button" id="restoreCheckpointButton" type="button">Restore safely</button>
+              </div>
+              <p class="restore-note">Restore is refused if any target has drifted or a foreground mission is active.</p>
+            </section>
+          </div>
+
+          <div class="view" id="view-evolve" data-view="evolve">
+            <div class="view-heading">
+              <div><p class="eyebrow">Adaptive compound evolution</p><h1>The loop learns<br><em>where to search.</em></h1></div>
+              <span class="advisory-badge">Advisory only</span>
+            </div>
+            <div class="evolution-summary">
+              <article><span>Selected family</span><strong id="evolveFamily">—</strong><small>Highest ranked active niche</small></article>
+              <article><span>Pressure</span><strong id="evolvePressure">—</strong><small>Rises with stagnation</small></article>
+              <article><span>Next budget</span><strong id="evolveBudget">—</strong><small>Within operator ceiling</small></article>
+              <article><span>Champion</span><strong id="evolveChampion">—</strong><small>Must not regress</small></article>
+            </div>
+            <section class="ranking-panel">
+              <div class="panel-head"><div><p class="eyebrow">Mutation portfolio</p><h2>Outcome-weighted family ranking</h2></div><span id="cooldownLabel" class="subtle-label">No cooldowns</span></div>
+              <div id="familyRanking" class="family-ranking"></div>
+            </section>
+            <section class="archive-panel">
+              <div class="panel-head"><div><p class="eyebrow">Quality diversity</p><h2>Elite archive</h2></div></div>
+              <div id="eliteArchive" class="elite-grid"></div>
+            </section>
+            <section class="ccos-panel">
+              <div class="panel-head">
+                <div><p class="eyebrow">Constitutional cognitive operating system</p><h2>Durable evidence plane</h2></div>
+                <span id="ccosRuntimeState" class="status-chip">Loading</span>
+              </div>
+              <div class="ccos-metrics">
+                <article><span>Generation</span><strong id="ccosGeneration">0</strong><small>verified immutable records</small></article>
+                <article><span>Ledger head</span><strong id="ccosHead">Empty</strong><small>content-addressed identity</small></article>
+                <article><span>Provider calls</span><strong id="ccosProviderCalls">0</strong><small>must remain zero</small></article>
+                <article><span>Activation</span><strong id="ccosActivation">Closed</strong><small>operator authority not implied</small></article>
+              </div>
+              <div class="ccos-grid">
+                <div class="ccos-console">
+                  <label for="ccosRecordKind">Record governed evidence</label>
+                  <select id="ccosRecordKind">
+                    <option value="genome">Genome</option><option value="evaluation">Evaluation</option>
+                    <option value="memory">Memory</option><option value="lineage">Lineage</option>
+                    <option value="observatory">Observatory</option><option value="quarantine">Quarantine</option>
+                    <option value="recovery">Recovery</option>
+                  </select>
+                  <textarea id="ccosRecordPayload" spellcheck="false">{"status":"OBSERVED","evidenceDigest":"REPLACE_WITH_VERIFIED_DIGEST"}</textarea>
+                  <div class="ccos-actions">
+                    <button class="outline-button" id="refreshCcosButton" type="button">Verify runtime</button>
+                    <button class="primary-button" id="appendCcosRecordButton" type="button">Record evidence</button>
+                    <button class="outline-button" id="runCcosCanaryButton" type="button">Run provider-free canary</button>
+                  </div>
+                </div>
+                <div class="ccos-console">
+                  <label for="ccosRecoveryConfirmation">Explicit recovery</label>
+                  <input id="ccosRecoveryConfirmation" type="text" autocomplete="off" placeholder="RECOVER_CCOS_LAST_KNOWN_GOOD">
+                  <button class="danger-button" id="recoverCcosButton" type="button">Recover verified index</button>
+                  <pre id="ccosResult">No durable CCOS evidence loaded.</pre>
+                </div>
+              </div>
+            </section>
+          </div>
+
+          <div class="view frontier-view" id="view-frontier" data-view="frontier">
+            <div class="view-heading">
+              <div><p class="eyebrow">P13-P20 control plane</p><h1>Think wider.<br><em>Change only what earns proof.</em></h1></div>
+              <span class="advisory-badge">Provider-free preflight</span>
+            </div>
+            <div class="fabric-metrics" id="frontierMetrics">
+              <article><span>Intent firewall</span><strong id="frontierIntent">Loading</strong><small>semantic diff gate</small></article>
+              <article><span>Mission campaign</span><strong id="frontierCampaign">Loading</strong><small>isolated parallel proof</small></article>
+              <article><span>Self-coding</span><strong id="frontierSelfCoding">Loading</strong><small>explicit authority only</small></article>
+              <article><span>Release</span><strong id="frontierRelease">Loading</strong><small>signed private gate</small></article>
+            </div>
+            <div class="frontier-grid">
+              <section class="frontier-panel">
+                <div class="panel-head"><div><p class="eyebrow">Discovery engine</p><h2>Evidence before invention</h2></div><span class="status-chip good">Local only</span></div>
+                <textarea id="discoveryQuestion" maxlength="2500" placeholder="What should Blunder investigate, falsify, or improve?"></textarea>
+                <button class="primary-button" id="runDiscoveryButton" type="button">Build discovery brief</button>
+                <pre id="discoveryResult">Ranked evidence, contradictions, and falsifiable hypotheses appear here.</pre>
+              </section>
+              <section class="frontier-panel">
+                <div class="panel-head"><div><p class="eyebrow">Language intelligence</p><h2>Repository-scale understanding</h2></div><span class="status-chip">No mutation</span></div>
+                <div class="frontier-input-row"><input id="referenceSymbol" type="text" autocomplete="off" placeholder="Exact Python symbol"><button class="outline-button" id="findReferencesButton" type="button">References</button></div>
+                <div class="frontier-input-row"><input id="completionPrefix" type="text" autocomplete="off" placeholder="Completion prefix"><button class="outline-button" id="findCompletionsButton" type="button">Complete</button></div>
+                <button class="outline-button" id="workspaceDiagnosticsButton" type="button">Workspace diagnostics</button>
+                <pre id="languageResult">References, completions, and strict diagnostics appear here.</pre>
+              </section>
+              <section class="frontier-panel frontier-wide">
+                <div class="panel-head"><div><p class="eyebrow">Bounded self-coding</p><h2>Authority is a file, never an implication</h2></div><span class="status-chip" id="selfCodingBadge">Preflight</span></div>
+                <div class="frontier-input-row"><input id="selfCodingTarget" type="text" autocomplete="off" placeholder="One exact target path"><input id="selfCodingTask" type="text" autocomplete="off" placeholder="One bounded improvement"></div>
+                <button class="outline-button" id="selfCodingPreflightButton" type="button">Evaluate authorization and budget</button>
+                <pre id="selfCodingResult">This surface can authorize an isolated mission only. It never integrates, commits, pushes, deploys, or expands permissions.</pre>
+              </section>
+            </div>
+          </div>
+
+          <div class="view product-view" id="view-product" data-view="product">
+            <div class="view-heading">
+              <div><p class="eyebrow">P21-P30 product intelligence</p><h1>From intent to a product<br><em>that survives contact with users.</em></h1></div>
+              <span class="advisory-badge">Build authority remains gated</span>
+            </div>
+            <div class="fabric-metrics">
+              <article><span>Blueprint</span><strong id="productBlueprintState">Loading</strong><small>journeys and states</small></article>
+              <article><span>Visual lab</span><strong id="productVisualState">Loading</strong><small>pixels and layout</small></article>
+              <article><span>Device matrix</span><strong id="productDeviceState">Loading</strong><small>eight profiles</small></article>
+              <article><span>Polyglot</span><strong id="productPolyglotState">Loading</strong><small id="productPolyglotDetail">source intelligence</small></article>
+            </div>
+            <div class="frontier-grid">
+              <section class="frontier-panel frontier-wide">
+                <div class="panel-head"><div><p class="eyebrow">App Blueprint Compiler</p><h2>Make the product contract executable</h2></div><span class="status-chip good">Zero provider</span></div>
+                <div class="product-form-grid">
+                  <input id="productName" type="text" maxlength="80" placeholder="Product name" autocomplete="off">
+                  <input id="productAudience" type="text" maxlength="300" placeholder="Audiences, comma separated" autocomplete="off">
+                  <input id="productPlatforms" type="text" maxlength="120" placeholder="Platforms: web, ios, android, game..." autocomplete="off">
+                  <input id="productEntities" type="text" maxlength="300" placeholder="Data entities, comma separated" autocomplete="off">
+                </div>
+                <textarea id="productGoal" maxlength="1200" placeholder="What outcome must this product create for its users?"></textarea>
+                <textarea id="productCapabilities" maxlength="1200" placeholder="One user capability per line"></textarea>
+                <button class="primary-button" id="compileBlueprintButton" type="button">Compile product blueprint</button>
+                <pre id="productBlueprintResult">The blueprint will expose journeys, every required experience state, navigation, data decisions, quality budgets, and unresolved product choices.</pre>
+              </section>
+              <section class="frontier-panel">
+                <div class="panel-head"><div><p class="eyebrow">Design-System Forge</p><h2>Accessible visual grammar</h2></div><span class="status-chip">Deterministic</span></div>
+                <input id="designSystemName" type="text" maxlength="80" placeholder="Design-system name" autocomplete="off">
+                <div class="color-grid">
+                  <label>Background<input id="designBackground" type="color" value="#090B0D"></label>
+                  <label>Surface<input id="designSurface" type="color" value="#15191E"></label>
+                  <label>Text<input id="designText" type="color" value="#F2F5F7"></label>
+                  <label>Muted<input id="designMuted" type="color" value="#AAB4BE"></label>
+                  <label>Primary<input id="designPrimary" type="color" value="#C9F269"></label>
+                  <label>Accent<input id="designAccent" type="color" value="#74B9FF"></label>
+                  <label>Danger<input id="designDanger" type="color" value="#FF6B7A"></label>
+                  <label>Focus<input id="designFocus" type="color" value="#F4D35E"></label>
+                </div>
+                <button class="outline-button" id="compileDesignSystemButton" type="button">Compile and verify tokens</button>
+                <pre id="designSystemResult">Contrast, typography, spacing, motion, breakpoints, states, and CSS variables appear here.</pre>
+              </section>
+              <section class="frontier-panel">
+                <div class="panel-head"><div><p class="eyebrow">Platform laboratories</p><h2>Inspect the real project</h2></div><span class="status-chip">Read only</span></div>
+                <div class="product-action-grid">
+                  <button class="outline-button product-audit-button" data-product-domain="mobile" type="button">Mobile</button>
+                  <button class="outline-button product-audit-button" data-product-domain="web" type="button">Web</button>
+                  <button class="outline-button product-audit-button" data-product-domain="game" type="button">Game</button>
+                  <button class="outline-button" id="buildDeviceMatrixButton" type="button">Device matrix</button>
+                  <button class="outline-button" id="runPolyglotButton" type="button">Polyglot index</button>
+                  <button class="outline-button" id="openProductArenaButton" type="button">Product arena</button>
+                </div>
+                <pre id="productLabResult">Select a laboratory to inspect framework, routes or scenes, tests, platform identity, quality budgets, and proof commands.</pre>
+              </section>
+            </div>
+          </div>
+
+          <div class="view creation-view" id="view-creation" data-view="creation">
+            <div class="view-heading creation-heading">
+              <div><p class="eyebrow">P41-P50 Creation Forge</p><h1>Imagine beyond the obvious.<br><em>Engineer beyond the demo.</em></h1></div>
+              <span class="advisory-badge">First-party / open contracts</span>
+            </div>
+            <div class="creation-metrics">
+              <article><span>Creative range</span><strong id="creationCreativeState">Loading</strong><small>quality plus diversity</small></article>
+              <article><span>AI architecture</span><strong id="creationAiState">Loading</strong><small>human decisions stay human</small></article>
+              <article><span>Automation</span><strong id="creationAutomationState">Loading</strong><small>durable and compensating</small></article>
+              <article><span>Open fabric</span><strong id="creationOpenState">Loading</strong><small>schema-bound tools</small></article>
+            </div>
+            <div class="creation-grid">
+              <section class="creation-panel creation-directions">
+                <div class="panel-head"><div><p class="eyebrow">Creative Compass</p><h2>Open several excellent futures</h2></div><span class="status-chip good">No generic winner</span></div>
+                <div class="creation-form-grid">
+                  <input id="creationName" type="text" maxlength="100" value="Lumen Automation Studio" aria-label="Creation name" autocomplete="off">
+                  <input id="creationAudiences" type="text" maxlength="300" value="builder, reviewer, operator" aria-label="Audiences" autocomplete="off">
+                  <select id="creationDirectionCount" aria-label="Direction count"><option value="3">3 directions</option><option value="4" selected>4 directions</option><option value="5">5 directions</option></select>
+                </div>
+                <textarea id="creationOutcome" maxlength="1200" aria-label="Human outcome">Help a builder turn an ambitious AI automation into a distinctive, understandable, safe, and testable product.</textarea>
+                <div class="creation-form-grid three">
+                  <textarea id="creationMoments" maxlength="1200" aria-label="Decisive moments">shape the human outcome&#10;compare creative directions&#10;review automation effects&#10;recover from failed proof</textarea>
+                  <textarea id="creationPrinciples" maxlength="1200" aria-label="Design principles">clarity before density&#10;evidence before confidence&#10;control before automation&#10;delight through understanding</textarea>
+                  <textarea id="creationAvoid" maxlength="1200" aria-label="Anti-patterns">generic dashboard&#10;decorative AI glow&#10;chat as the only interaction&#10;hidden external effects</textarea>
+                </div>
+                <button class="primary-button creation-primary" id="compileCreativeBriefButton" type="button">Illuminate creative space</button>
+                <div class="direction-deck" id="creativeDirectionCards"><article class="direction-placeholder"><span>01</span><strong>Directions appear here</strong><small>Distinct visual, interaction, and voice grammars remain alive until prototype evidence exists.</small></article></div>
+              </section>
+              <section class="creation-panel">
+                <div class="panel-head"><div><p class="eyebrow">AI System Architect</p><h2>Design the intelligence and its limits</h2></div><span class="status-chip">Human controlled</span></div>
+                <textarea id="creationAiDecisions" maxlength="1000" aria-label="User decisions">approve external effects&#10;select the final creative direction&#10;accept a proposed release</textarea>
+                <div class="creation-form-grid">
+                  <input id="creationAiInputs" type="text" value="operator brief, repository evidence, prior traces" aria-label="AI inputs" autocomplete="off">
+                  <input id="creationAiOutputs" type="text" value="typed plan, risk register, review packet" aria-label="AI outputs" autocomplete="off">
+                </div>
+                <button class="outline-button" id="compileAiSystemButton" type="button">Compile AI product architecture</button>
+                <pre id="creationAiResult">User value, decisions, context, tools, memory, uncertainty, feedback, failure, and evaluation become one reviewable topology.</pre>
+              </section>
+              <section class="creation-panel automation-panel">
+                <div class="panel-head"><div><p class="eyebrow">Automation Graph Compiler</p><h2>Every effect has a gate and a way back</h2></div><span class="status-chip">Dry run only</span></div>
+                <div class="automation-flow" aria-label="Example durable automation"><span>Trigger</span><i></i><span>AI draft</span><i></i><span class="human-node">Human gate</span><i></i><span class="effect-node">Effect</span><i></i><span>Terminal</span></div>
+                <ul class="creation-contract-list"><li>Idempotent AI and action nodes</li><li>Durable resumable state</li><li>Bounded retries and timeouts</li><li>Compensation for high-risk effects</li><li>Trace every transition</li></ul>
+                <button class="outline-button" id="compileAutomationButton" type="button">Compile reference automation</button>
+                <pre id="creationAutomationResult">The reference flow cannot execute, schedule, publish, or create an external effect.</pre>
+              </section>
+              <section class="creation-panel creation-toolkit">
+                <div class="panel-head"><div><p class="eyebrow">Open Intelligence Fabric</p><h2>Prompts, tools, traces, and creative proof</h2></div><span class="status-chip good">Zero dependencies</span></div>
+                <div class="creation-tool-grid">
+                  <button class="creation-tool-button" id="compileOpenToolButton" type="button"><span>Tool</span><strong>Open Tool Foundry</strong><small>Blunder plus MCP contract</small></button>
+                  <button class="creation-tool-button" id="compilePromptProgramButton" type="button"><span>Prompt</span><strong>Context Program</strong><small>Schema and injection boundary</small></button>
+                  <button class="creation-tool-button" id="gradeTraceButton" type="button"><span>Trace</span><strong>Observatory</strong><small>Grounding, approval, cost</small></button>
+                  <button class="creation-tool-button" id="openCreativeArenaButton" type="button"><span>Arena</span><strong>Quality-Diversity</strong><small>Evidence across creative niches</small></button>
+                </div>
+                <pre id="creationToolkitResult">Choose a first-party compiler. Outputs are content-addressed, portable JSON and do not install or invoke a provider.</pre>
+              </section>
+            </div>
+          </div>
+
+          <div class="view kernel-view" id="view-kernel" data-view="kernel">
+            <div class="view-heading">
+              <div><p class="eyebrow">P31-P40 Quorum Graph Kernel</p><h1>Code as living evidence.<br><em>Promotion as earned consensus.</em></h1></div>
+              <span class="advisory-badge">Source remains canonical</span>
+            </div>
+            <div class="fabric-metrics">
+              <article><span>Semantic graph</span><strong id="kernelGraphState">Loading</strong><small id="kernelGraphDetail">content-addressed topology</small></article>
+              <article><span>Micro-spaces</span><strong id="kernelShardState">Loading</strong><small>bounded process proof</small></article>
+              <article><span>Quorum</span><strong id="kernelQuorumState">Loading</strong><small>proposer · skeptic · judge</small></article>
+              <article><span>Metabolism</span><strong id="kernelMetabolismState">Loading</strong><small>measured idle budget only</small></article>
+            </div>
+            <div class="frontier-grid">
+              <section class="frontier-panel frontier-wide">
+                <div class="panel-head"><div><p class="eyebrow">Live semantic topology</p><h2>Trace the blast radius before mutation</h2></div><span class="status-chip good">Derived · read only</span></div>
+                <div class="kernel-input-row">
+                  <input id="kernelImpactPaths" type="text" maxlength="1000" value="blunder/quorum_kernel.py" aria-label="Changed paths, comma separated" autocomplete="off">
+                  <input id="kernelImpactDepth" type="number" min="1" max="8" value="4" aria-label="Maximum impact depth">
+                </div>
+                <div class="fabric-actions">
+                  <button class="outline-button" id="refreshKernelGraphButton" type="button">Refresh graph</button>
+                  <button class="primary-button" id="analyzeKernelImpactButton" type="button">Analyze impact frontier</button>
+                </div>
+                <pre id="kernelGraphResult">The graph binds every source and symbol node to exact content while preserving files as the reviewable authority.</pre>
+              </section>
+              <section class="frontier-panel">
+                <div class="panel-head"><div><p class="eyebrow">Deterministic micro-spaces</p><h2>Real proof, sealed transcripts</h2></div><span class="status-chip">No arbitrary commands</span></div>
+                <ul class="kernel-contract-list">
+                  <li>Python compilation</li><li>Python integration selection</li><li>Node syntax verification</li><li>Single-process limit requested and reported</li><li>Repeated normalized-output identity</li>
+                </ul>
+                <button class="outline-button" id="runKernelProofButton" type="button">Run first-party kernel proof</button>
+                <pre id="kernelShardResult">Validation runs only through the allowlisted broker. WASM isolation is not claimed.</pre>
+              </section>
+              <section class="frontier-panel">
+                <div class="panel-head"><div><p class="eyebrow">Quorum immune system</p><h2>Disagreement becomes quarantine</h2></div><span class="status-chip">Unanimous</span></div>
+                <div class="quorum-role-grid"><article><span>P</span><strong>Proposer</strong><small>creative candidate</small></article><article><span>S</span><strong>Skeptic</strong><small>adversarial challenge</small></article><article><span>J</span><strong>Judge</strong><small>deterministic proof</small></article></div>
+                <pre id="kernelQuorumResult">Three independent contexts must bind the same candidate, proposal digest, graph fingerprint, checkpoint, and passing shard evidence. Fixed autonomous promotion thresholds remain fail-closed.</pre>
+              </section>
+              <section class="frontier-panel frontier-wide">
+                <div class="panel-head"><div><p class="eyebrow">Bounded metabolism</p><h2>Use spare capacity without consuming the machine</h2></div><span class="status-chip">Telemetry required</span></div>
+                <div class="metabolic-grid">
+                  <label>CPU now (%)<input id="kernelCpuPercent" type="number" min="0" max="100" value="12.5"></label>
+                  <label>Available memory (GiB)<input id="kernelMemoryGiB" type="number" min="0" max="1024" value="8"></label>
+                  <label>Thermal state<select id="kernelThermalState"><option value="nominal">Nominal</option><option value="cool">Cool</option><option value="warm">Warm</option><option value="hot">Hot</option><option value="unknown">Unknown</option></select></label>
+                  <label class="approval-toggle compact-toggle"><input id="kernelOperatorIdle" type="checkbox"><span class="toggle-track"></span><span><strong>Operator is idle</strong><small>Explicit measured state</small></span></label>
+                </div>
+                <button class="outline-button" id="compileMetabolicPlanButton" type="button">Compile no-mutation metabolic plan</button>
+                <pre id="kernelMetabolicResult">No idle work is selected until operator-idle, foreground-mission, CPU, memory, thermal, queue, and destructive-authority gates all pass.</pre>
+              </section>
+            </div>
+          </div>
+
+          <div class="view files-view" id="view-files" data-view="files">
+            <div class="view-heading compact">
+              <div><p class="eyebrow">Source, without the clutter</p><h1>Find the file.<br><em>See the truth.</em></h1></div>
+            </div>
+            <div class="file-workspace">
+              <section class="file-search-panel">
+                <div class="search-mode-row"><label for="fileSearch">Search source</label><button id="searchModeButton" type="button">Names</button></div>
+                <div class="search-box"><span>⌕</span><input id="fileSearch" type="search" placeholder="Try ‘compound’, ‘status’, ‘shell’…" autocomplete="off"></div>
+                <div id="fileResults" class="file-results"><p>Type two characters to search first-party source.</p></div>
+              </section>
+              <section class="file-reader">
+                <div class="file-reader-head"><span id="filePath">No file selected</span><span id="fileBytes"></span><span id="editorState" class="editor-state">Read only</span></div>
+                <div class="semantic-editor-shell">
+                  <div class="editor-main">
+                    <div class="editor-toolbar">
+                      <label for="definitionSymbol">Go to definition</label><input id="definitionSymbol" type="text" autocomplete="off" placeholder="Exact symbol"><button id="definitionButton" type="button">Find</button><span id="cursorPosition">Ln 1, Col 1</span>
+                    </div>
+                    <textarea id="fileContent" spellcheck="false" autocomplete="off" autocapitalize="off" aria-label="Blunder semantic source editor" disabled>Select a source file to edit it here.</textarea>
+                    <div class="editor-save-row"><input id="editorSaveConfirmation" type="text" autocomplete="off" placeholder="Open a file to receive its exact save phrase" disabled><button class="primary-button" id="editorSaveButton" type="button" disabled>Save to review tree</button></div>
+                  </div>
+                  <aside class="editor-intelligence">
+                    <section><div class="editor-aside-title"><span>Outline</span><strong id="symbolCount">0</strong></div><div id="editorOutline" class="editor-list"><p>No symbols loaded.</p></div></section>
+                    <section><div class="editor-aside-title"><span>Diagnostics</span><strong id="diagnosticCount">0</strong></div><div id="editorDiagnostics" class="editor-list"><p>No diagnostics loaded.</p></div></section>
+                    <section><div class="editor-aside-title"><span>Definitions</span><strong id="definitionCount">0</strong></div><div id="definitionResults" class="editor-list"><p>Search an exact symbol.</p></div></section>
+                  </aside>
+                </div>
+              </section>
+            </div>
+          </div>
+        </section>
+
+        <aside class="proof-rail">
+          <section class="proof-header">
+            <p class="eyebrow">Proof rail</p>
+            <h2>System pulse</h2>
+            <span class="status-chip good" id="systemStatus">Loading</span>
+          </section>
+          <section class="proof-block">
+            <div class="proof-title"><span>Queue</span><strong id="queueTotal">—</strong></div>
+            <div id="queueBreakdown" class="breakdown"></div>
+          </section>
+          <section class="proof-block">
+            <div class="proof-title"><span>Provider</span><strong id="providerState">—</strong></div>
+            <dl>
+              <div><dt>Model</dt><dd id="providerModel">—</dd></div>
+              <div><dt>Calls</dt><dd id="providerCalls">—</dd></div>
+              <div><dt>Failures</dt><dd id="providerFailures">—</dd></div>
+            </dl>
+          </section>
+          <section class="proof-block">
+            <div class="proof-title"><span>Runtime</span><strong id="runtimeState">—</strong></div>
+            <dl>
+              <div><dt>PID proof</dt><dd id="pidState">—</dd></div>
+              <div><dt>Last advice</dt><dd id="lastAdvice">—</dd></div>
+            </dl>
+          </section>
+          <section class="proof-block boundary-block">
+            <div class="proof-title"><span>Boundary</span><strong class="good-text">Closed</strong></div>
+            <p>High-impact operations never inherit approval from this interface.</p>
+          </section>
+        </aside>
+      </main>
+    </div>
+
+    <div class="palette hidden" id="palette" role="dialog" aria-modal="true" aria-labelledby="paletteTitle">
+      <button class="palette-backdrop" id="paletteBackdrop" type="button" aria-label="Close command palette"></button>
+      <section class="palette-card">
+        <div class="palette-search"><span>⌘</span><input id="paletteInput" type="search" placeholder="Type a command…" autocomplete="off"><kbd>Esc</kbd></div>
+        <h2 id="paletteTitle" class="sr-only">Command palette</h2>
+        <div class="palette-list" id="paletteList"></div>
+      </section>
+    </div>
+
+    <div class="toast hidden" id="toast" role="status"><span id="toastIcon">✓</span><p id="toastText"></p></div>
+    <script src="/app.js" defer></script>
+  </body>
+</html>
