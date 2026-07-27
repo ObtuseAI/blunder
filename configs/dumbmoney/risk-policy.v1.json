@@ -1,0 +1,22 @@
+{
+  "schema": "dumbmoney.risk-policy.v1",
+  "policy_epoch": 1,
+  "combined_capital_bps": 2500,
+  "per_venue_capital_bps": {
+    "dopey_robinhood": 1250,
+    "dummy_kalshi": 1250
+  },
+  "per_idea_loss_bps": 100,
+  "correlated_loss_bps": 300,
+  "combined_daily_loss_bps": 300,
+  "per_venue_daily_loss_bps": {
+    "dopey_robinhood": 150,
+    "dummy_kalshi": 150
+  },
+  "high_water_drawdown_bps": 1000,
+  "openrouter_daily_budget_cents": 1000,
+  "capital_envelope_ttl_seconds": 60,
+  "mandate_max_ttl_days": 30,
+  "max_open_orders_per_venue": 5,
+  "max_positions_per_venue": 12
+}

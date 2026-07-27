@@ -1,0 +1,254 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:dumbmoney:schema:dopey-migration-manifest:v1",
+  "title": "Hash-manifested tiered Dopey migration",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "migration_id",
+    "created_at",
+    "source_product",
+    "destination_product",
+    "source_root_disclosed",
+    "policy_id",
+    "state",
+    "broker_state_authoritative",
+    "promotion_authority",
+    "secret_scan",
+    "entries",
+    "exclusions",
+    "counts_by_tier",
+    "included_bytes",
+    "manifest_sha256"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "dumbmoney.dopey-migration-manifest.v1"
+    },
+    "migration_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "Z$"
+    },
+    "source_product": {
+      "const": "Dopey"
+    },
+    "destination_product": {
+      "const": "DumbMoney"
+    },
+    "source_root_disclosed": {
+      "const": false
+    },
+    "policy_id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "state": {
+      "enum": [
+        "PLANNED",
+        "EXPORTED"
+      ]
+    },
+    "broker_state_authoritative": {
+      "const": false
+    },
+    "promotion_authority": {
+      "const": false
+    },
+    "secret_scan": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "all_payload_bytes_scanned_in_utf8_and_nul_stripped_ascii_domains",
+        "encoding_uncertainty_forces_binary_review",
+        "compressed_or_non_utf8_limitations_acknowledged",
+        "matching_files_excluded",
+        "binary_entry_count",
+        "binary_review_status"
+      ],
+      "properties": {
+        "all_payload_bytes_scanned_in_utf8_and_nul_stripped_ascii_domains": {
+          "const": true
+        },
+        "encoding_uncertainty_forces_binary_review": {
+          "const": true
+        },
+        "compressed_or_non_utf8_limitations_acknowledged": {
+          "const": true
+        },
+        "matching_files_excluded": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "binary_entry_count": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "binary_review_status": {
+          "enum": [
+            "REQUIRED",
+            "NOT_APPLICABLE"
+          ]
+        }
+      }
+    },
+    "entries": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "source_path",
+          "packaged_path",
+          "tier",
+          "sha256",
+          "bytes",
+          "mtime_ns",
+          "content_scan",
+          "encoding_scan",
+          "media_type"
+        ],
+        "properties": {
+          "source_path": {
+            "type": "string",
+            "minLength": 1
+          },
+          "packaged_path": {
+            "type": "string",
+            "minLength": 1
+          },
+          "tier": {
+            "enum": [
+              "tier-1-operational",
+              "tier-2-recent",
+              "tier-3-cold"
+            ]
+          },
+          "sha256": {
+            "type": "string",
+            "pattern": "^[0-9a-f]{64}$"
+          },
+          "bytes": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "mtime_ns": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "content_scan": {
+            "enum": [
+              "TEXT_SECRET_SCAN",
+              "BINARY_BEST_EFFORT_SECRET_SCAN"
+            ]
+          },
+          "encoding_scan": {
+            "type": "object",
+            "additionalProperties": false,
+            "required": [
+              "utf8_pattern_scan",
+              "nul_stripped_ascii_pattern_scan",
+              "strict_utf8_valid",
+              "nul_bytes_detected",
+              "bom"
+            ],
+            "properties": {
+              "utf8_pattern_scan": {
+                "const": true
+              },
+              "nul_stripped_ascii_pattern_scan": {
+                "const": true
+              },
+              "strict_utf8_valid": {
+                "type": "boolean"
+              },
+              "nul_bytes_detected": {
+                "type": "boolean"
+              },
+              "bom": {
+                "enum": [
+                  "NONE",
+                  "UTF8",
+                  "UTF16_LE",
+                  "UTF16_BE"
+                ]
+              }
+            }
+          },
+          "media_type": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "exclusions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "source_path",
+          "reason_codes"
+        ],
+        "properties": {
+          "source_path": {
+            "type": "string",
+            "minLength": 1
+          },
+          "reason_codes": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          },
+          "matched_rule_ids": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "minLength": 1
+            }
+          }
+        }
+      }
+    },
+    "counts_by_tier": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "tier-1-operational",
+        "tier-2-recent",
+        "tier-3-cold"
+      ],
+      "properties": {
+        "tier-1-operational": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "tier-2-recent": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "tier-3-cold": {
+          "type": "integer",
+          "minimum": 0
+        }
+      }
+    },
+    "included_bytes": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "manifest_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    }
+  }
+}

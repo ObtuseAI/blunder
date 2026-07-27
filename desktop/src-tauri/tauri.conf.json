@@ -1,8 +1,8 @@
 {
   "$schema": "https://schema.tauri.app/config/2",
-  "productName": "Blunder",
+  "productName": "DumbMoney",
   "version": "1.2.0-alpha.1",
-  "identifier": "ai.obtuse.blunder",
+  "identifier": "ai.obtuse.dumbmoney",
   "build": {
     "beforeDevCommand": "npm run dev",
     "devUrl": "http://localhost:1420",
@@ -13,7 +13,7 @@
     "windows": [
       {
         "label": "main",
-        "title": "Blunder",
+        "title": "DumbMoney",
         "width": 1440,
         "height": 920,
         "minWidth": 1080,
@@ -30,7 +30,6 @@
   "bundle": {
     "active": true,
     "targets": ["nsis"],
-    "externalBin": ["binaries/blunder-core"],
     "createUpdaterArtifacts": false,
     "windows": {
       "webviewInstallMode": {

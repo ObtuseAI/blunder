@@ -1,0 +1,182 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:dumbmoney:schema:dummy-legacy-epoch-plan:v1",
+  "title": "Non-executable Dummy legacy-ledger operational epoch plan",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "plan_id",
+    "created_at",
+    "status",
+    "source",
+    "planned_epoch",
+    "inspection",
+    "operator_gates",
+    "prohibited_automatic_actions",
+    "next_step",
+    "plan_sha256"
+  ],
+  "properties": {
+    "schema_version": {
+      "const": "dumbmoney.dummy-legacy-epoch-plan.v1"
+    },
+    "plan_id": {
+      "type": "string",
+      "format": "uuid"
+    },
+    "created_at": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "Z$"
+    },
+    "status": {
+      "const": "PLAN_ONLY"
+    },
+    "source": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "path",
+        "bytes",
+        "mtime_ns",
+        "sqlite_header_present",
+        "first_megabyte_sha256",
+        "live_path_detected"
+      ],
+      "properties": {
+        "path": {
+          "type": "string",
+          "minLength": 1
+        },
+        "bytes": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "mtime_ns": {
+          "type": "integer",
+          "minimum": 0
+        },
+        "sqlite_header_present": {
+          "type": "boolean"
+        },
+        "first_megabyte_sha256": {
+          "type": "string",
+          "pattern": "^[0-9a-f]{64}$"
+        },
+        "live_path_detected": {
+          "type": "boolean"
+        }
+      }
+    },
+    "planned_epoch": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "root",
+        "operational_journal",
+        "content_store",
+        "legacy_mount_mode",
+        "high_volume_research_allowed"
+      ],
+      "properties": {
+        "root": {
+          "type": "string",
+          "minLength": 1
+        },
+        "operational_journal": {
+          "type": "string",
+          "minLength": 1
+        },
+        "content_store": {
+          "type": "string",
+          "minLength": 1
+        },
+        "legacy_mount_mode": {
+          "const": "READ_ONLY"
+        },
+        "high_volume_research_allowed": {
+          "const": false
+        }
+      }
+    },
+    "inspection": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "sqlite_connection_opened",
+        "checkpoint_requested",
+        "wal_modified",
+        "broker_contacted",
+        "network_contacted",
+        "source_files_written"
+      ],
+      "properties": {
+        "sqlite_connection_opened": {
+          "const": false
+        },
+        "checkpoint_requested": {
+          "const": false
+        },
+        "wal_modified": {
+          "const": false
+        },
+        "broker_contacted": {
+          "const": false
+        },
+        "network_contacted": {
+          "const": false
+        },
+        "source_files_written": {
+          "const": false
+        }
+      }
+    },
+    "operator_gates": {
+      "type": "array",
+      "minItems": 5,
+      "maxItems": 5,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "gate",
+          "requirement"
+        ],
+        "properties": {
+          "gate": {
+            "enum": [
+              "BROKER_TRUTH_RECEIPT",
+              "WRITER_QUIESCENCE",
+              "CHECKPOINT_BACKUP",
+              "RESTORE_PROOF",
+              "NEW_OPERATIONAL_EPOCH"
+            ]
+          },
+          "requirement": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "prohibited_automatic_actions": {
+      "type": "array",
+      "minItems": 7,
+      "maxItems": 7,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "minLength": 1
+      }
+    },
+    "next_step": {
+      "type": "string",
+      "minLength": 1
+    },
+    "plan_sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    }
+  }
+}

@@ -1,336 +1,576 @@
 import { useCallback, useEffect, useMemo, useState } from "react";
-import { listen } from "@tauri-apps/api/event";
-import { getJson, postJson } from "./api";
+import { createDemoSnapshot, loadFundControlSnapshot } from "./fund-data";
 import type {
-  ApprovalRequest,
-  CreateTaskRequest,
-  ProjectList,
-  ProjectSummary,
-  PromotionState,
-  TaskEvent,
-  TaskList,
-  TaskSnapshot,
-} from "./types";
+  BackupState,
+  CandidateStage,
+  FundControlSnapshot,
+  ServiceState,
+  SnapshotResult,
+  VenueMode,
+  VenueStatus,
+} from "./fund-types";
 
-type Navigation = "Projects" | "Work" | "Review" | "Library";
+const refreshIntervalMs = 30_000;
 
-const navigation: Navigation[] = ["Projects", "Work", "Review", "Library"];
+const serviceGlyphs: Record<FundControlSnapshot["services"][number]["id"], string> = {
+  core: "CO",
+  "research-mesh": "RM",
+  "model-gateway": "MG",
+  "dummy-kalshi": "DK",
+  "dopey-robinhood": "DR",
+};
 
-const emptyRequest = (): CreateTaskRequest => ({
-  objective: "",
-  constraints: ["Keep external authority disabled"],
-  successCriteria: ["Produce reviewable evidence linked to the source revision"],
-  deliverables: ["Evidence-backed result"],
-  assumptions: [],
-  unknowns: [],
+const stageLabels: Record<CandidateStage, string> = {
+  IDEA: "Idea",
+  REPLAY: "Replay",
+  POINT_IN_TIME_BACKTEST: "PIT backtest",
+  FORWARD_SHADOW: "Forward shadow",
+  PAPER: "Paper",
+  CAPPED_LIVE_CANARY: "Live canary",
+  SCALE_REVIEW: "Scale review",
+};
+
+const formatNumber = (value: number | null): string =>
+  value === null ? "UNKNOWN" : new Intl.NumberFormat("en-US").format(value);
+
+const formatPercent = (value: number | null, digits = 1): string =>
+  value === null ? "UNKNOWN" : `${value.toFixed(digits)}%`;
+
+const formatUsd = (value: number | null): string =>
+  value === null
+    ? "UNKNOWN"
+    : new Intl.NumberFormat("en-US", {
+        style: "currency",
+        currency: "USD",
+        minimumFractionDigits: 2,
+        maximumFractionDigits: 2,
+      }).format(value);
+
+const formatTime = (value: string | null): string => {
+  if (value === null) return "UNKNOWN";
+  const date = new Date(value);
+  return Number.isNaN(date.valueOf())
+    ? "UNKNOWN"
+    : new Intl.DateTimeFormat("en-US", {
+        month: "short",
+        day: "numeric",
+        hour: "numeric",
+        minute: "2-digit",
+        second: "2-digit",
+      }).format(date);
+};
+
+const formatAge = (seconds: number | null): string => {
+  if (seconds === null) return "UNKNOWN";
+  if (seconds < 60) return `${Math.max(0, Math.round(seconds))}s`;
+  if (seconds < 3_600) return `${Math.round(seconds / 60)}m`;
+  return `${(seconds / 3_600).toFixed(1)}h`;
+};
+
+const clippedRatio = (value: number | null, maximum: number): number =>
+  value === null || maximum <= 0 ? 0 : Math.max(0, Math.min(100, (value / maximum) * 100));
+
+const shortDigest = (value: string | null): string =>
+  value === null || value.length === 0 ? "UNKNOWN" : `${value.slice(0, 12)}…`;
+
+const toneForService = (state: ServiceState): "good" | "warn" | "bad" | "muted" => {
+  if (state === "ONLINE") return "good";
+  if (state === "DEGRADED" || state === "STARTING") return "warn";
+  if (state === "OFFLINE") return "bad";
+  return "muted";
+};
+
+const toneForMode = (mode: VenueMode): "good" | "warn" | "bad" | "muted" => {
+  if (mode === "AGGRESSIVE_BOUNDED" || mode === "MECHANICAL_CANARY" || mode === "LIVE") return "good";
+  if (mode === "RECONCILIATION_ONLY" || mode === "READ_ONLY" || mode === "PAPER" || mode === "PAUSED") return "warn";
+  if (mode === "FROZEN") return "bad";
+  return "muted";
+};
+
+const toneForBackup = (state: BackupState): "good" | "warn" | "bad" | "muted" => {
+  if (state === "VERIFIED") return "good";
+  if (state === "RUNNING" || state === "STALE") return "warn";
+  if (state === "FAILED") return "bad";
+  return "muted";
+};
+
+const toneForControl = (
+  status: FundControlSnapshot["control"]["status"],
+): "good" | "warn" | "bad" | "muted" => {
+  if (status === "LIVE_READY") return "good";
+  if (status === "DEGRADED") return "warn";
+  if (status === "PAUSED") return "bad";
+  return "muted";
+};
+
+const MetricBar = ({
+  label,
+  value,
+  maximum,
+  display,
+  limit,
+  tone = "lime",
+}: {
+  label: string;
+  value: number | null;
+  maximum: number;
+  display: string;
+  limit: string;
+  tone?: "lime" | "amber" | "cyan";
+}) => (
+  <div className="metric-bar">
+    <div className="metric-bar-copy">
+      <span>{label}</span>
+      <strong className={value === null ? "unknown-value" : ""}>{display}</strong>
+    </div>
+    <div
+      className={`bar-track bar-${tone}`}
+      role="progressbar"
+      aria-label={label}
+      aria-valuemin={0}
+      aria-valuemax={maximum}
+      aria-valuenow={value ?? undefined}
+      aria-valuetext={value === null ? "Unknown" : display}
+    >
+      <span style={{ width: `${clippedRatio(value, maximum)}%` }} />
+    </div>
+    <small>{limit}</small>
+  </div>
+);
+
+const ServiceCard = ({
+  service,
+}: {
+  service: FundControlSnapshot["services"][number];
+}) => {
+  const tone = toneForService(service.state);
+  return (
+    <article className={`service-card tone-${tone}`}>
+      <div className="service-card-head">
+        <span className="service-glyph" aria-hidden="true">{serviceGlyphs[service.id]}</span>
+        <span className={`state-chip tone-${tone}`}><i aria-hidden="true" />{service.state}</span>
+      </div>
+      <strong>{service.name}</strong>
+      <p>{service.detail}</p>
+      <div className="service-meta">
+        <span>Heartbeat {formatAge(service.heartbeatAgeSeconds)}</span>
+        <span>{service.version ?? "Version unknown"}</span>
+      </div>
+    </article>
+  );
+};
+
+const VenueCard = ({ venue }: { venue: VenueStatus }) => {
+  const modeTone = toneForMode(venue.mode);
+  return (
+    <article className="venue-card">
+      <div className="venue-head">
+        <div>
+          <span className="section-kicker">{venue.cell} cell</span>
+          <h3>{venue.venue}</h3>
+        </div>
+        <span className={`mode-chip tone-${modeTone}`}>{venue.mode.replaceAll("_", " ")}</span>
+      </div>
+      <p className="venue-detail">{venue.detail}</p>
+      <dl className="venue-metrics">
+        <div>
+          <dt>Reconciled</dt>
+          <dd className={venue.reconciliationAgeSeconds === null ? "unknown-value" : ""}>
+            {venue.reconciliationAgeSeconds === null ? "UNKNOWN" : `${formatAge(venue.reconciliationAgeSeconds)} ago`}
+          </dd>
+        </div>
+        <div>
+          <dt>Open orders</dt>
+          <dd className={venue.openOrders === null ? "unknown-value" : ""}>{formatNumber(venue.openOrders)}</dd>
+        </div>
+        <div>
+          <dt>Positions</dt>
+          <dd className={venue.openPositions === null ? "unknown-value" : ""}>{formatNumber(venue.openPositions)}</dd>
+        </div>
+        <div>
+          <dt>Unknown outcomes</dt>
+          <dd className={venue.unknownOutcomes === null ? "unknown-value" : ""}>{formatNumber(venue.unknownOutcomes)}</dd>
+        </div>
+        <div>
+          <dt>Outbox depth</dt>
+          <dd className={venue.outboxDepth === null ? "unknown-value" : ""}>{formatNumber(venue.outboxDepth)}</dd>
+        </div>
+        <div>
+          <dt>Account pinned</dt>
+          <dd className={venue.accountPinned === null ? "unknown-value" : ""}>
+            {venue.accountPinned === null ? "UNKNOWN" : venue.accountPinned ? "YES" : "NO"}
+          </dd>
+        </div>
+      </dl>
+    </article>
+  );
+};
+
+const createInitialResult = (): SnapshotResult => ({
+  origin: "DEMO_UNAVAILABLE",
+  snapshot: createDemoSnapshot(),
+  error: "Waiting for the authenticated DumbMoney Core snapshot.",
 });
 
-const shortDigest = (value: string): string => value.slice(0, 12);
-
-const TaskCard = ({ task, onSelect }: { task: TaskSnapshot; onSelect: (task: TaskSnapshot) => void }) => (
-  <button className="task-card" type="button" onClick={() => onSelect(task)}>
-    <span className={`state-dot state-${task.state.toLowerCase()}`} aria-hidden="true" />
-    <span className="task-card-copy">
-      <strong>{task.contract.objective}</strong>
-      <small>{task.state.replaceAll("_", " ")} · {task.stage}</small>
-    </span>
-    <time>{new Date(task.updatedAt).toLocaleTimeString()}</time>
-  </button>
-);
-
-const ApprovalControl = ({
-  approval,
-  onDecision,
-}: {
-  approval: ApprovalRequest;
-  onDecision: (approval: ApprovalRequest, decision: string) => Promise<void>;
-}) => (
-  <section className="approval-panel">
-    <span className="eyebrow">Needs approval</span>
-    <h3>{approval.kind.replaceAll("-", " ")}</h3>
-    <p>{approval.reason}</p>
-    <div className="button-row">
-      <button type="button" className="primary" onClick={() => void onDecision(approval, approval.exactApprovePhrase)}>
-        Approve bounded exception
-      </button>
-      <button type="button" className="quiet danger" onClick={() => void onDecision(approval, approval.exactDenyPhrase)}>
-        Deny
-      </button>
-    </div>
-  </section>
-);
-
 export const App = () => {
-  const [activeNavigation, setActiveNavigation] = useState<Navigation>("Work");
-  const [project, setProject] = useState<ProjectSummary | null>(null);
-  const [tasks, setTasks] = useState<TaskSnapshot[]>([]);
-  const [selectedTask, setSelectedTask] = useState<TaskSnapshot | null>(null);
-  const [request, setRequest] = useState<CreateTaskRequest>(emptyRequest());
-  const [events, setEvents] = useState<TaskEvent[]>([]);
-  const [promotions, setPromotions] = useState<PromotionState | null>(null);
-  const [error, setError] = useState<string | null>(null);
-  const [working, setWorking] = useState(false);
+  const [result, setResult] = useState<SnapshotResult>(createInitialResult);
+  const [refreshing, setRefreshing] = useState(false);
 
   const refresh = useCallback(async (): Promise<void> => {
-    const [projects, taskList, promotionState] = await Promise.all([
-      getJson<ProjectList>("/api/v1/projects"),
-      getJson<TaskList>("/api/v1/tasks"),
-      getJson<PromotionState>("/api/v1/promotions"),
-    ]);
-    const currentProject = projects.projects.find((item) => item.active) ?? null;
-    setProject(currentProject);
-    setTasks(taskList.tasks);
-    setPromotions(promotionState);
-    setSelectedTask((current) => {
-      if (current === null) return taskList.tasks[0] ?? null;
-      return taskList.tasks.find((item) => item.contract.taskId === current.contract.taskId) ?? current;
-    });
+    setRefreshing(true);
+    try {
+      setResult(await loadFundControlSnapshot());
+    } finally {
+      setRefreshing(false);
+    }
   }, []);
 
   useEffect(() => {
-    void refresh().catch((reason: unknown) => setError(String(reason)));
-    const unlisten = listen<TaskEvent>("task-event", (event) => {
-      setEvents((current) => [event.payload, ...current].slice(0, 100));
-      void refresh().catch((reason: unknown) => setError(String(reason)));
-    });
-    return () => {
-      void unlisten.then((stop) => stop());
-    };
+    void refresh();
+    const timer = window.setInterval(() => void refresh(), refreshIntervalMs);
+    return () => window.clearInterval(timer);
   }, [refresh]);
 
-  const submit = async (): Promise<void> => {
-    setWorking(true);
-    setError(null);
-    try {
-      const task = await postJson<TaskSnapshot>("/api/v1/tasks", request);
-      setRequest(emptyRequest());
-      setSelectedTask(task);
-      await refresh();
-    } catch (reason: unknown) {
-      setError(String(reason));
-    } finally {
-      setWorking(false);
-    }
-  };
-
-  const cancel = async (task: TaskSnapshot): Promise<void> => {
-    setWorking(true);
-    try {
-      const updated = await postJson<TaskSnapshot>(`/api/v1/tasks/${task.contract.taskId}/cancel`, {});
-      setSelectedTask(updated);
-      await refresh();
-    } catch (reason: unknown) {
-      setError(String(reason));
-    } finally {
-      setWorking(false);
-    }
-  };
-
-  const launch = async (task: TaskSnapshot): Promise<void> => {
-    setWorking(true);
-    setError(null);
-    try {
-      const updated = await postJson<TaskSnapshot>(`/api/v1/tasks/${task.contract.taskId}/launch`, {});
-      setSelectedTask(updated);
-      await refresh();
-    } catch (reason: unknown) {
-      setError(String(reason));
-    } finally {
-      setWorking(false);
-    }
-  };
-
-  const integrate = async (task: TaskSnapshot): Promise<void> => {
-    setWorking(true);
-    setError(null);
-    try {
-      const updated = await postJson<TaskSnapshot>(`/api/v1/tasks/${task.contract.taskId}/integrate`, {
-        confirmation: `INTEGRATE ${task.contract.taskId}`,
-      });
-      setSelectedTask(updated);
-      await refresh();
-    } catch (reason: unknown) {
-      setError(String(reason));
-    } finally {
-      setWorking(false);
-    }
-  };
-
-  const decide = async (approval: ApprovalRequest, decision: string): Promise<void> => {
-    setWorking(true);
-    try {
-      const updated = await postJson<TaskSnapshot>(`/api/v1/approvals/${approval.approvalId}/decision`, { decision });
-      setSelectedTask(updated);
-      await refresh();
-    } catch (reason: unknown) {
-      setError(String(reason));
-    } finally {
-      setWorking(false);
-    }
-  };
-
-  const reviewTasks = useMemo(() => tasks.filter((task) => task.state === "READY_FOR_REVIEW"), [tasks]);
-  const displayedTasks = activeNavigation === "Review" ? reviewTasks : tasks;
+  const snapshot = result.snapshot;
+  const openRouterUsage = useMemo(() => {
+    if (snapshot.modelBudget.spentUsd === null || snapshot.modelBudget.dailyLimitUsd <= 0) return null;
+    return (snapshot.modelBudget.spentUsd / snapshot.modelBudget.dailyLimitUsd) * 100;
+  }, [snapshot.modelBudget.dailyLimitUsd, snapshot.modelBudget.spentUsd]);
+  const live = result.origin === "LIVE_CORE";
+  const killTone =
+    snapshot.kill.active === true ? "bad" : snapshot.kill.active === false ? "good" : "muted";
+  const lossTelemetryKnown =
+    snapshot.loss.stopped !== null &&
+    snapshot.loss.dailyLossUsedPct !== null &&
+    snapshot.loss.currentDrawdownPct !== null;
+  const controlTone = toneForControl(snapshot.control.status);
+  const controlReasons =
+    snapshot.control.reasonCodes.length === 0
+      ? "No control-plane reason codes published"
+      : snapshot.control.reasonCodes.join(" · ");
 
   return (
-    <main className="app-shell">
+    <main className="app-shell" data-origin={result.origin} aria-busy={refreshing}>
       <header className="topbar">
-        <div className="brand-mark" aria-hidden="true">B</div>
-        <div>
-          <strong>Blunder</strong>
-          <span>{project?.name ?? "Starting core…"}</span>
+        <div className="wordmark">
+          <span className="brand-mark" aria-hidden="true">DM</span>
+          <div>
+            <strong>DumbMoney</strong>
+            <span>Autonomous personal-prop control room</span>
+          </div>
         </div>
-        <div className="topbar-status">
-          <span className="status-pulse" />
-          {working ? "Working" : "Ready"}
+        <div className="identity-strip" aria-label="Operating identity">
+          <span className="identity-tag personal">PERSONAL_PROP</span>
+          <span className="identity-tag exploratory">RISK_ACCEPTED_EXPLORATORY</span>
+        </div>
+        <div className="snapshot-controls">
+          <div>
+            <span className={`source-chip ${live ? "source-live" : "source-demo"}`}>
+              <i aria-hidden="true" />
+              {live ? "LIVE CORE" : "DEMO · CORE UNAVAILABLE"}
+            </span>
+            <time>{formatTime(snapshot.capturedAt)}</time>
+          </div>
+          <button type="button" className="refresh-button" onClick={() => void refresh()} disabled={refreshing}>
+            {refreshing ? "Refreshing…" : "Refresh readout"}
+          </button>
         </div>
       </header>
 
-      <aside className="sidebar" aria-label="Primary navigation">
-        <nav>
-          {navigation.map((item) => (
-            <button
-              className={item === activeNavigation ? "active" : ""}
-              key={item}
-              type="button"
-              onClick={() => setActiveNavigation(item)}
-            >
-              {item}
-              {item === "Review" && reviewTasks.length > 0 ? <span className="badge">{reviewTasks.length}</span> : null}
-            </button>
-          ))}
+      <aside className="sidebar">
+        <nav aria-label="Control room sections">
+          <a href="#system"><span>01</span>System</a>
+          <a href="#capital"><span>02</span>Capital</a>
+          <a href="#venues"><span>03</span>Venues</a>
+          <a href="#evidence"><span>04</span>Evidence</a>
+          <a href="#operations"><span>05</span>Operations</a>
         </nav>
-        <section className="boundary-card">
-          <span className="eyebrow">Authority</span>
-          <strong>{project?.policy.provider.enabled ? "Bounded provider" : "Provider closed"}</strong>
-          <small>Deploy and push closed · promotion threshold-gated</small>
+        <section className="rail-boundary">
+          <span className="section-kicker">Authority boundary</span>
+          <strong>Observe only</strong>
+          <p>No orders, capital edits, credentials, transfers, or mandate changes exist in this interface.</p>
+        </section>
+        <section className="rail-policy">
+          <span>Policy epoch</span>
+          <strong>{snapshot.policyEpoch === null ? "UNKNOWN" : `#${snapshot.policyEpoch}`}</strong>
+          <code>{shortDigest(snapshot.policyDigest)}</code>
         </section>
       </aside>
 
       <section className="workspace">
-        <div className="workspace-heading">
+        {!live ? (
+          <section className="demo-banner" role="alert">
+            <strong>DEMO DATA — LIVE CONTROL SNAPSHOT UNAVAILABLE</strong>
+            <span>Every value below is a layout placeholder or UNKNOWN. Do not use this screen for trading decisions.</span>
+            {result.error !== null ? <code>{result.error}</code> : null}
+          </section>
+        ) : null}
+
+        <section className="hero">
           <div>
-            <span className="eyebrow">{activeNavigation}</span>
-            <h1>{activeNavigation === "Work" ? "What outcome do you want?" : activeNavigation}</h1>
+            <span className="section-kicker">DumbMoney / command readout</span>
+            <h1>Autonomy, without ambiguity.</h1>
+            <p>One read-only view of system health, broker reconciliation, bounded capital, research spend, and proof state.</p>
           </div>
-          <span className="revision">Source {shortDigest(project?.sourceRevision ?? "unversioned")}</span>
-        </div>
+          <div className="hero-state">
+            <span className="section-kicker">Authoritative control state</span>
+            <span className={`state-chip tone-${controlTone}`}>
+              <i aria-hidden="true" />
+              {snapshot.control.status.replaceAll("_", " ")}
+            </span>
+            <small title={controlReasons}>{controlReasons}</small>
+            <span className="section-kicker">Desired operating mode</span>
+            <strong>{snapshot.mandate.desiredMode.replaceAll("_", " ")}</strong>
+            <span className={`kill-chip tone-${killTone}`}>
+              <i aria-hidden="true" />
+              {snapshot.kill.active === null
+                ? "KILL STATE UNKNOWN"
+                : snapshot.kill.active
+                  ? "GLOBAL KILL ACTIVE"
+                  : "GLOBAL KILL CLEAR"}
+            </span>
+          </div>
+        </section>
 
-        {activeNavigation === "Work" ? (
-          <section className="composer">
-            <textarea
-              aria-label="Desired outcome"
-              value={request.objective}
-              onChange={(event) => setRequest((current) => ({ ...current, objective: event.target.value }))}
-              placeholder="Describe the outcome. Blunder will choose the internal strategy."
-            />
-            <div className="composer-footer">
-              <span>No modes · no model picker · evidence required</span>
-              <button className="primary" type="button" disabled={working || request.objective.trim().length < 3} onClick={() => void submit()}>
-                Start work
-              </button>
-            </div>
-          </section>
-        ) : null}
-
-        {error !== null ? <div className="error-banner" role="alert">{error}</div> : null}
-
-        {activeNavigation === "Library" ? (
-          <section className="promotion-library" aria-label="Autonomous promotion ledger">
-            <div className="promotion-summary">
-              <div><span className="eyebrow">Promoted</span><strong>{promotions?.promotedCount ?? 0}</strong></div>
-              <div><span className="eyebrow">Blocked</span><strong>{promotions?.blockedCount ?? 0}</strong></div>
-              <div><span className="eyebrow">Policy</span><strong>Fixed thresholds</strong></div>
-            </div>
-            {promotions?.records.slice().reverse().map((record) => (
-              <article className="promotion-record" key={record.recordDigest}>
-                <div>
-                  <span className="eyebrow">{record.decision.scope.replaceAll("-", " ")}</span>
-                  <h3>{record.decision.status.replaceAll("_", " ")}</h3>
-                  <code>{shortDigest(record.decision.candidateIdentity)} · {shortDigest(record.decision.decisionDigest)}</code>
-                </div>
-                <span className={record.decision.promoted ? "promotion-pass" : "promotion-blocked"}>
-                  {record.decision.promoted ? "Activated" : `${record.decision.failedGates.length} gates blocked`}
-                </span>
-              </article>
-            ))}
-            {promotions?.records.length === 0 ? <p className="empty-state">No promotion decisions have been recorded.</p> : null}
-          </section>
-        ) : (
-          <section className="task-list" aria-label="Tasks">
-            {displayedTasks.map((task) => <TaskCard task={task} onSelect={setSelectedTask} key={task.contract.taskId} />)}
-            {displayedTasks.length === 0 ? <p className="empty-state">No work is waiting here.</p> : null}
-          </section>
-        )}
-      </section>
-
-      <aside className="evidence-drawer" aria-label="Task evidence">
-        {selectedTask === null ? (
-          <div className="empty-evidence">Select a task to inspect its evidence.</div>
-        ) : (
-          <>
-            <span className="eyebrow">{selectedTask.state.replaceAll("_", " ")}</span>
-            <h2>{selectedTask.contract.objective}</h2>
-            <p>{selectedTask.statusReason}</p>
-
-            <dl className="evidence-grid">
-              <div><dt>Stage</dt><dd>{selectedTask.stage}</dd></div>
-              <div><dt>Event</dt><dd>#{selectedTask.eventSequence}</dd></div>
-              <div><dt>Budget</dt><dd>${selectedTask.contract.budget.maximumCostUsd.toFixed(2)}</dd></div>
-              <div><dt>Providers</dt><dd>{selectedTask.contract.budget.maximumProviderCalls}</dd></div>
-            </dl>
-
-            {selectedTask.blockers.length > 0 ? (
-              <section className="evidence-section">
-                <h3>Blockers</h3>
-                <ul>{selectedTask.blockers.map((item) => <li key={item}>{item}</li>)}</ul>
-              </section>
-            ) : null}
-
-            <section className="evidence-section">
-              <h3>Specialists</h3>
-              <div className="agent-list">
-                {selectedTask.selectedAgents.map((agent) => <span key={agent}>{agent.replace("agent-", "")}</span>)}
+        <section className="dashboard-section" id="system">
+          <div className="section-heading">
+            <div>
+              <span className="section-index">01</span>
+              <div>
+                <span className="section-kicker">Runtime fabric</span>
+                <h2>Five-service state</h2>
               </div>
-            </section>
+            </div>
+            <p>Missing telemetry remains UNKNOWN. The desktop never infers health from silence.</p>
+          </div>
+          <div className="service-grid">
+            {snapshot.services.map((service) => <ServiceCard key={service.id} service={service} />)}
+          </div>
+        </section>
 
-            {selectedTask.approvals.filter((item) => item.status === "PENDING").map((approval) => (
-              <ApprovalControl approval={approval} onDecision={decide} key={approval.approvalId} />
-            ))}
+        <section className="dashboard-section" id="capital">
+          <div className="section-heading">
+            <div>
+              <span className="section-index">02</span>
+              <div>
+                <span className="section-kicker">Bounded authority</span>
+                <h2>Capital, loss, and compute</h2>
+              </div>
+            </div>
+            <p>Percentages are measured against explicitly designated DUMBMONEY_NAV.</p>
+          </div>
+          <div className="capital-grid">
+            <article className="panel capital-panel">
+              <div className="panel-heading">
+                <div>
+                  <span className="section-kicker">Capital envelope</span>
+                  <h3>{formatPercent(snapshot.capital.utilizationPctOfEnvelope)} utilized</h3>
+                </div>
+                <span className="ceiling-chip">{formatPercent(snapshot.capital.combinedEnvelopeLimitPct, 0)} NAV ceiling</span>
+              </div>
+              <MetricBar
+                label="Combined deployed / collateral"
+                value={snapshot.capital.utilizedPctOfNav}
+                maximum={snapshot.capital.combinedEnvelopeLimitPct}
+                display={formatPercent(snapshot.capital.utilizedPctOfNav)}
+                limit={`${formatPercent(snapshot.capital.remainingPctOfNav)} NAV capacity remaining`}
+              />
+              <div className="split-metrics">
+                <div><span>Dummy · Kalshi</span><strong>{formatPercent(snapshot.capital.dummyAllocatedPctOfNav)}</strong><small>12.5% max sleeve</small></div>
+                <div><span>Dopey · Robinhood</span><strong>{formatPercent(snapshot.capital.dopeyAllocatedPctOfNav)}</strong><small>12.5% max sleeve</small></div>
+              </div>
+            </article>
 
-            <section className="evidence-section">
-              <h3>Identity</h3>
-              <code>{shortDigest(selectedTask.contract.contractDigest)} · {shortDigest(selectedTask.eventDigest)}</code>
-            </section>
+            <article className="panel loss-panel">
+              <div className="panel-heading">
+                <div>
+                  <span className="section-kicker">Loss controls</span>
+                  <h3>
+                    {snapshot.loss.stopped === true
+                      ? "Loss stop engaged"
+                      : lossTelemetryKnown
+                        ? "Within published policy"
+                        : "Loss telemetry unknown"}
+                  </h3>
+                </div>
+                <span
+                  className={`state-chip tone-${
+                    snapshot.loss.stopped === true ? "bad" : lossTelemetryKnown ? "good" : "muted"
+                  }`}
+                >
+                  <i aria-hidden="true" />
+                  {snapshot.loss.stopped === true ? "STOPPED" : lossTelemetryKnown ? "READOUT" : "UNKNOWN"}
+                </span>
+              </div>
+              <MetricBar
+                label="Combined daily loss"
+                value={snapshot.loss.dailyLossUsedPct}
+                maximum={snapshot.loss.dailyLossLimitPct}
+                display={formatPercent(snapshot.loss.dailyLossUsedPct)}
+                limit={`${formatPercent(snapshot.loss.dailyLossLimitPct)} daily stop`}
+                tone="amber"
+              />
+              <MetricBar
+                label="High-water drawdown"
+                value={snapshot.loss.currentDrawdownPct}
+                maximum={snapshot.loss.highWaterDrawdownKillPct}
+                display={formatPercent(snapshot.loss.currentDrawdownPct)}
+                limit={`${formatPercent(snapshot.loss.highWaterDrawdownKillPct)} kill threshold`}
+                tone="amber"
+              />
+            </article>
 
-            {selectedTask.artifacts.length > 0 ? (
-              <section className="evidence-section">
-                <h3>Artifacts</h3>
-                <ul>{selectedTask.artifacts.map((artifact) => <li key={artifact.artifactId}>{artifact.kind} · {shortDigest(artifact.sha256)}</li>)}</ul>
-              </section>
-            ) : null}
+            <article className="panel model-panel">
+              <div className="panel-heading">
+                <div>
+                  <span className="section-kicker">Research compute</span>
+                  <h3>OpenRouter</h3>
+                </div>
+                <span
+                  className={`state-chip tone-${
+                    snapshot.modelBudget.researchPaused === true ? "warn" : snapshot.modelBudget.researchPaused === false ? "muted" : "muted"
+                  }`}
+                >
+                  <i aria-hidden="true" />
+                  {snapshot.modelBudget.researchPaused === true
+                    ? "PAUSED"
+                    : snapshot.modelBudget.researchPaused === false
+                      ? "$10 HARD CAP"
+                      : "STATE UNKNOWN"}
+                </span>
+              </div>
+              <div className="model-spend">
+                <strong>{formatUsd(snapshot.modelBudget.spentUsd)}</strong>
+                <span>of {formatUsd(snapshot.modelBudget.dailyLimitUsd)} today</span>
+              </div>
+              <MetricBar
+                label="Daily model budget"
+                value={openRouterUsage}
+                maximum={100}
+                display={formatPercent(openRouterUsage)}
+                limit={`${formatUsd(snapshot.modelBudget.remainingUsd)} remaining`}
+                tone="cyan"
+              />
+              <small className="reset-copy">
+                Reset {snapshot.modelBudget.resetsAt === null ? "UNKNOWN" : formatTime(snapshot.modelBudget.resetsAt)}
+              </small>
+            </article>
+          </div>
+        </section>
 
-            {selectedTask.missionId === null && selectedTask.contract.authority.isolatedSourceMutation && selectedTask.contract.authority.provider ? (
-              <button className="primary" type="button" disabled={working} onClick={() => void launch(selectedTask)}>Launch isolated mission</button>
-            ) : null}
+        <section className="dashboard-section" id="venues">
+          <div className="section-heading">
+            <div>
+              <span className="section-index">03</span>
+              <div>
+                <span className="section-kicker">Sovereign cells</span>
+                <h2>Venue truth</h2>
+              </div>
+            </div>
+            <p>Dummy remains Kalshi-only. Dopey remains Robinhood-only. Neither credential crosses cells.</p>
+          </div>
+          <div className="venue-grid">
+            {snapshot.venues.map((venue) => <VenueCard key={venue.id} venue={venue} />)}
+          </div>
+        </section>
 
-            {selectedTask.state === "READY_FOR_REVIEW" && selectedTask.missionId !== null ? (
-              <button className="primary" type="button" disabled={working} onClick={() => void integrate(selectedTask)}>Integrate verified patch</button>
-            ) : null}
+        <section className="dashboard-section" id="evidence">
+          <div className="section-heading">
+            <div>
+              <span className="section-index">04</span>
+              <div>
+                <span className="section-kicker">Proof-carrying alpha forge</span>
+                <h2>Candidate evidence</h2>
+              </div>
+            </div>
+            <p>Stages describe evidence maturity and authority scope. They do not claim profitability.</p>
+          </div>
+          <article className="panel evidence-panel">
+            <div className="evidence-summary">
+              <div>
+                <span>Active candidates</span>
+                <strong className={snapshot.evidence.activeCandidates === null ? "unknown-value" : ""}>
+                  {formatNumber(snapshot.evidence.activeCandidates)}
+                </strong>
+              </div>
+              <div>
+                <span>Quarantined</span>
+                <strong className={snapshot.evidence.quarantinedCandidates === null ? "unknown-value" : ""}>
+                  {formatNumber(snapshot.evidence.quarantinedCandidates)}
+                </strong>
+              </div>
+              <div>
+                <span>Evidence courts</span>
+                <strong className={snapshot.evidence.evidenceCourtsPassing === null ? "unknown-value" : ""}>
+                  {snapshot.evidence.evidenceCourtsPassing === null ||
+                  snapshot.evidence.evidenceCourtsTotal === null
+                    ? "UNKNOWN"
+                    : `${snapshot.evidence.evidenceCourtsPassing}/${snapshot.evidence.evidenceCourtsTotal}`}
+                </strong>
+              </div>
+            </div>
+            <div className="stage-pipeline" aria-label="Candidate stages">
+              {snapshot.evidence.stages.map((stage, index) => (
+                <div className="stage-node" key={stage.stage}>
+                  <span className="stage-order">{String(index + 1).padStart(2, "0")}</span>
+                  <strong>{stageLabels[stage.stage]}</strong>
+                  <span className={stage.count === null ? "unknown-value" : ""}>{formatNumber(stage.count)}</span>
+                </div>
+              ))}
+            </div>
+          </article>
+        </section>
 
-            {selectedTask.state !== "CANCELLED" ? (
-              <button className="quiet" type="button" disabled={working} onClick={() => void cancel(selectedTask)}>Cancel task</button>
-            ) : null}
-          </>
-        )}
+        <section className="dashboard-section" id="operations">
+          <div className="section-heading">
+            <div>
+              <span className="section-index">05</span>
+              <div>
+                <span className="section-kicker">Durability</span>
+                <h2>Backup and restore evidence</h2>
+              </div>
+            </div>
+            <p>A backup is not trusted until a restore test has been witnessed.</p>
+          </div>
+          <div className="operations-grid">
+            <article className="panel operations-panel">
+              <div className="panel-heading">
+                <div>
+                  <span className="section-kicker">Control ledger</span>
+                  <h3>Recovery posture</h3>
+                </div>
+                <span className={`state-chip tone-${toneForBackup(snapshot.backup.state)}`}>
+                  <i aria-hidden="true" />{snapshot.backup.state}
+                </span>
+              </div>
+              <p>{snapshot.backup.detail}</p>
+              <dl className="operations-list">
+                <div><dt>Last backup</dt><dd>{formatTime(snapshot.backup.lastBackupAt)}</dd></div>
+                <div><dt>Last restore test</dt><dd>{formatTime(snapshot.backup.lastRestoreTestAt)}</dd></div>
+                <div><dt>Ledger sequence</dt><dd>{formatNumber(snapshot.backup.eventLedgerSequence)}</dd></div>
+                <div><dt>Control outbox</dt><dd>{formatNumber(snapshot.backup.controlLedgerOutboxDepth)}</dd></div>
+              </dl>
+            </article>
+            <aside className="truth-card">
+              <span className="section-kicker">Operator truth</span>
+              <h3>This screen does not trade.</h3>
+              <p>It exposes state and evidence only. Orders, cancellations, credentials, capital changes, and mandate signing remain outside the renderer.</p>
+              <ul>
+                <li>Unknown is never displayed as zero.</li>
+                <li>Demo data is never displayed as live.</li>
+                <li>Health is not evidence of after-cost edge.</li>
+                <li>Cancellation is not represented as a flat book.</li>
+              </ul>
+            </aside>
+          </div>
+        </section>
 
-        {events.length > 0 ? (
-          <section className="event-strip">
-            <span className="eyebrow">Live events</span>
-            {events.slice(0, 4).map((event) => <small key={event.eventId}>#{event.sequence} {event.kind}</small>)}
-          </section>
-        ) : null}
-      </aside>
+        <footer className="footer">
+          <span>DumbMoney operator desktop</span>
+          <span>DumbMoney product · Blunder control plane</span>
+          <span>Read-only · no profitability claim</span>
+        </footer>
+      </section>
     </main>
   );
 };

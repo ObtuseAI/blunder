@@ -1,0 +1,368 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://obtuse.ai/schemas/dumbmoney/cell-command-page.v1.schema.json",
+  "title": "DumbMoney signed cell command page",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "cell_id",
+    "request_nonce",
+    "observed_at",
+    "after_sequence",
+    "after_digest",
+    "next_sequence",
+    "next_digest",
+    "ledger_head_sequence",
+    "ledger_head_digest",
+    "has_more",
+    "required_action",
+    "commands",
+    "checkpoint",
+    "checkpoint_signature"
+  ],
+  "properties": {
+    "schema": {
+      "const": "dumbmoney.cell-command-page.v1"
+    },
+    "cell_id": {
+      "$ref": "#/$defs/cell_id"
+    },
+    "request_nonce": {
+      "$ref": "#/$defs/sha256"
+    },
+    "observed_at": {
+      "$ref": "#/$defs/utc_timestamp"
+    },
+    "after_sequence": {
+      "$ref": "#/$defs/sequence"
+    },
+    "after_digest": {
+      "$ref": "#/$defs/sha256"
+    },
+    "next_sequence": {
+      "$ref": "#/$defs/sequence"
+    },
+    "next_digest": {
+      "$ref": "#/$defs/sha256"
+    },
+    "ledger_head_sequence": {
+      "$ref": "#/$defs/sequence"
+    },
+    "ledger_head_digest": {
+      "$ref": "#/$defs/sha256"
+    },
+    "has_more": {
+      "type": "boolean"
+    },
+    "required_action": {
+      "$ref": "#/$defs/required_action"
+    },
+    "commands": {
+      "type": "array",
+      "items": {
+        "$ref": "#/$defs/command"
+      }
+    },
+    "checkpoint": {
+      "$ref": "#/$defs/checkpoint"
+    },
+    "checkpoint_signature": {
+      "$ref": "#/$defs/checkpoint_signature"
+    }
+  },
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "sequence": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "utc_timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "Z$"
+    },
+    "cell_id": {
+      "enum": [
+        "dummy_kalshi",
+        "dopey_robinhood"
+      ]
+    },
+    "required_action": {
+      "enum": [
+        "CANCEL_AND_RECONCILE",
+        "PAUSE_NEW_RISK",
+        "APPLY_SIGNED_CONTROLS"
+      ]
+    },
+    "authority_effect": {
+      "enum": [
+        "APPLY_FAIL_CLOSED",
+        "APPLY_POSITIVE",
+        "HISTORICAL_ONLY"
+      ]
+    },
+    "ledger_proof": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema",
+        "global_sequence",
+        "event_id",
+        "source_id",
+        "source_sequence",
+        "signer_key_id",
+        "nonce",
+        "event_schema",
+        "observed_at",
+        "received_at",
+        "correlation_id",
+        "causation_id",
+        "payload_digest",
+        "previous_source_digest",
+        "previous_global_digest",
+        "event_digest"
+      ],
+      "properties": {
+        "schema": {
+          "const": "dumbmoney.ledger-event-proof.v1"
+        },
+        "global_sequence": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "event_id": {
+          "$ref": "#/$defs/sha256"
+        },
+        "source_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "source_sequence": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "signer_key_id": {
+          "$ref": "#/$defs/sha256"
+        },
+        "nonce": {
+          "type": "string",
+          "minLength": 1
+        },
+        "event_schema": {
+          "type": "string",
+          "minLength": 1
+        },
+        "observed_at": {
+          "$ref": "#/$defs/utc_timestamp"
+        },
+        "received_at": {
+          "$ref": "#/$defs/utc_timestamp"
+        },
+        "correlation_id": {
+          "type": "string",
+          "minLength": 1
+        },
+        "causation_id": {
+          "oneOf": [
+            {
+              "type": "null"
+            },
+            {
+              "$ref": "#/$defs/sha256"
+            }
+          ]
+        },
+        "payload_digest": {
+          "$ref": "#/$defs/sha256"
+        },
+        "previous_source_digest": {
+          "$ref": "#/$defs/sha256"
+        },
+        "previous_global_digest": {
+          "$ref": "#/$defs/sha256"
+        },
+        "event_digest": {
+          "$ref": "#/$defs/sha256"
+        }
+      }
+    },
+    "ordered_command": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "global_sequence",
+        "event_id",
+        "event_digest",
+        "body_schema",
+        "valid_now",
+        "transport_window_current",
+        "authority_effect",
+        "ledger_proof"
+      ],
+      "properties": {
+        "global_sequence": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "event_id": {
+          "$ref": "#/$defs/sha256"
+        },
+        "event_digest": {
+          "$ref": "#/$defs/sha256"
+        },
+        "body_schema": {
+          "enum": [
+            "dumbmoney.desired-mode.v1",
+            "dumbmoney.kill-state.v1",
+            "dumbmoney.capital-envelope.v1"
+          ]
+        },
+        "valid_now": {
+          "type": "boolean"
+        },
+        "transport_window_current": {
+          "type": "boolean"
+        },
+        "authority_effect": {
+          "$ref": "#/$defs/authority_effect"
+        },
+        "ledger_proof": {
+          "$ref": "#/$defs/ledger_proof"
+        }
+      }
+    },
+    "command": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "global_sequence",
+        "event_id",
+        "event_digest",
+        "body_schema",
+        "valid_now",
+        "transport_window_current",
+        "authority_effect",
+        "ledger_proof",
+        "envelope"
+      ],
+      "properties": {
+        "global_sequence": {
+          "type": "integer",
+          "minimum": 1
+        },
+        "event_id": {
+          "$ref": "#/$defs/sha256"
+        },
+        "event_digest": {
+          "$ref": "#/$defs/sha256"
+        },
+        "body_schema": {
+          "enum": [
+            "dumbmoney.desired-mode.v1",
+            "dumbmoney.kill-state.v1",
+            "dumbmoney.capital-envelope.v1"
+          ]
+        },
+        "valid_now": {
+          "type": "boolean"
+        },
+        "transport_window_current": {
+          "type": "boolean"
+        },
+        "authority_effect": {
+          "$ref": "#/$defs/authority_effect"
+        },
+        "ledger_proof": {
+          "$ref": "#/$defs/ledger_proof"
+        },
+        "envelope": {
+          "$ref": "https://obtuse.ai/schemas/dumbmoney/signed-envelope.v1.schema.json"
+        }
+      }
+    },
+    "checkpoint": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema",
+        "cell_id",
+        "request_nonce",
+        "after_sequence",
+        "after_digest",
+        "ordered_commands",
+        "next_sequence",
+        "next_digest",
+        "ledger_head_sequence",
+        "ledger_head_digest",
+        "observed_at",
+        "required_action"
+      ],
+      "properties": {
+        "schema": {
+          "const": "dumbmoney.cell-command-checkpoint.v1"
+        },
+        "cell_id": {
+          "$ref": "#/$defs/cell_id"
+        },
+        "request_nonce": {
+          "$ref": "#/$defs/sha256"
+        },
+        "after_sequence": {
+          "$ref": "#/$defs/sequence"
+        },
+        "after_digest": {
+          "$ref": "#/$defs/sha256"
+        },
+        "ordered_commands": {
+          "type": "array",
+          "items": {
+            "$ref": "#/$defs/ordered_command"
+          }
+        },
+        "next_sequence": {
+          "$ref": "#/$defs/sequence"
+        },
+        "next_digest": {
+          "$ref": "#/$defs/sha256"
+        },
+        "ledger_head_sequence": {
+          "$ref": "#/$defs/sequence"
+        },
+        "ledger_head_digest": {
+          "$ref": "#/$defs/sha256"
+        },
+        "observed_at": {
+          "$ref": "#/$defs/utc_timestamp"
+        },
+        "required_action": {
+          "$ref": "#/$defs/required_action"
+        }
+      }
+    },
+    "checkpoint_signature": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "algorithm",
+        "signer_key_id",
+        "signature"
+      ],
+      "properties": {
+        "algorithm": {
+          "const": "Ed25519"
+        },
+        "signer_key_id": {
+          "$ref": "#/$defs/sha256"
+        },
+        "signature": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9_-]{86}$"
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,21 @@
+<!-- PLAN-ONLY TEMPLATE: no broker credentials may be bound to this service. -->
+<service>
+  <id>DumbMoneyResearchMesh</id>
+  <name>DumbMoney Research Mesh</name>
+  <description>Immutable candidate intake and capital-request relay only.</description>
+  <executable>{{DUMBMONEY_RESEARCH_MESH_EXECUTABLE}}</executable>
+  <arguments>{{DUMBMONEY_RESEARCH_MESH_ARGUMENTS}}</arguments>
+  <workingdirectory>{{DUMBMONEY_RELEASE_ROOT}}</workingdirectory>
+  <depend>DumbMoneyCore</depend>
+  <depend>DumbMoneyModelGateway</depend>
+  <stoptimeout>60sec</stoptimeout>
+  <onfailure action="restart" delay="30 sec" />
+  <env name="DUMBMONEY_SERVICE_NAME" value="DumbMoneyResearchMesh" />
+  <env name="DUMBMONEY_PROGRAM_DATA" value="{{DUMBMONEY_PROGRAM_DATA}}" />
+  <env name="DUMBMONEY_RELEASE_ID" value="{{DUMBMONEY_RELEASE_ID}}" />
+  <env name="DUMBMONEY_TELEMETRY_PUBLICATION" value="disabled" />
+  <log mode="roll-by-size">
+    <sizeThreshold>10485760</sizeThreshold>
+    <keepFiles>10</keepFiles>
+  </log>
+</service>
