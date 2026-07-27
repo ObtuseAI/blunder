@@ -1,0 +1,221 @@
+{
+  "schema_version": "dumbmoney.windows-services.v1",
+  "product": "DumbMoney",
+  "installation_authority": "PLAN_ONLY",
+  "deployment_scope": "PRIVATE_LOCAL_WINDOWS",
+  "telemetry_publication": "DISABLED",
+  "readiness_schema": "deployment/dumbmoney/schemas/readiness-descriptor.v1.schema.json",
+  "readiness_ttl_seconds": 90,
+  "research_worker_boundary": {
+    "identity": "DumbMoneyResearchWorker",
+    "identity_kind": "NON_SERVICE_LOCAL_ACCOUNT",
+    "windows_service": false,
+    "credential_targets": [],
+    "secret_refs": [],
+    "network_allowlist": [],
+    "research_artifact_root": "C:\\ProgramData\\DumbMoney\\research-worker\\artifacts\\objects",
+    "write_roots": [
+      "%PROGRAMDATA%\\DumbMoney\\spool\\model\\requests",
+      "%PROGRAMDATA%\\DumbMoney\\research-worker\\artifacts\\objects"
+    ],
+    "read_roots": [
+      "%PROGRAMDATA%\\DumbMoney\\spool\\model\\responses",
+      "%PROGRAMDATA%\\DumbMoney\\spool\\model\\outcomes",
+      "%PROGRAMDATA%\\DumbMoney\\research-worker\\artifacts\\objects"
+    ],
+    "artifact_write_mode": "CONTENT_ADDRESSED_CREATE_ONCE_CONFLICT_FAIL",
+    "broker_authority": "NONE",
+    "model_access": "TYPED_FILE_SPOOL_ONLY",
+    "command_execution": "UNTRUSTED_OFFLINE_ONLY",
+    "bundle_handoff": "IMMUTABLE_HASH_PINNED_ONLY",
+    "forbidden_host_identities": [
+      "DumbMoneyCore",
+      "DumbMoneyResearchMesh",
+      "DumbMoneyModelGateway",
+      "DumbMoneyDummyKalshi",
+      "DumbMoneyDopeyRobinhood"
+    ]
+  },
+  "services": [
+    {
+      "name": "DumbMoneyCore",
+      "display_name": "DumbMoney Core",
+      "role": "control-ledger-capital-governor",
+      "command_ref": "DUMBMONEY_CORE_COMMAND",
+      "dependencies": [],
+      "broker_authority": "NONE",
+      "secret_refs": [
+        "secret-ref:dumbmoney-core-ed25519-seed",
+        "secret-ref:dumbmoney-desktop-read-token",
+        "secret-ref:dumbmoney-operator-token",
+        "secret-ref:dumbmoney-allocator-token",
+        "secret-ref:dumbmoney-dummy-cell-token",
+        "secret-ref:dumbmoney-dopey-cell-token"
+      ],
+      "config_bindings": {
+        "core_signer_target": "credential-target:DumbMoney/CoreSigner",
+        "role_public_key_bundle": "config-ref:DumbMoney/RolePublicKeys",
+        "desktop_read_token_target": "credential-target:DumbMoney/DesktopReadToken",
+        "operator_token_target": "credential-target:DumbMoney/OperatorToken",
+        "allocator_token_target": "credential-target:DumbMoney/AllocatorToken",
+        "dummy_cell_token_target": "credential-target:DumbMoney/DummyCellToken",
+        "dopey_cell_token_target": "credential-target:DumbMoney/DopeyCellToken",
+        "core_runner_config": "path-ref:C:\\ProgramData\\DumbMoney\\config\\core-runner.v1.json",
+        "core_runner_config_sha256": "config-ref:DumbMoney/SealedReleaseManifest#installed_artifacts/core-runner-config/sha256",
+        "core_endpoint": "endpoint-ref:DumbMoneyCore",
+        "readiness_descriptor": "readiness-ref:DumbMoneyCore"
+      },
+      "network_allowlist": [
+        "loopback"
+      ],
+      "write_roots": [
+        "%PROGRAMDATA%\\DumbMoney\\core",
+        "%PROGRAMDATA%\\DumbMoney\\readiness"
+      ],
+      "readiness_descriptor": "%PROGRAMDATA%\\DumbMoney\\readiness\\DumbMoneyCore.json"
+    },
+    {
+      "name": "DumbMoneyResearchMesh",
+      "display_name": "DumbMoney Research Mesh",
+      "role": "candidate-intake-and-capital-request-relay",
+      "command_ref": "DUMBMONEY_RESEARCH_MESH_COMMAND",
+      "dependencies": [
+        "DumbMoneyCore",
+        "DumbMoneyModelGateway"
+      ],
+      "broker_authority": "NONE",
+      "secret_refs": [
+        "secret-ref:dumbmoney-research-mesh-ed25519-seed",
+        "secret-ref:dumbmoney-research-mesh-allocator-ed25519-seed",
+        "secret-ref:dumbmoney-allocator-token",
+        "secret-ref:dumbmoney-model-gateway-client-token"
+      ],
+      "config_bindings": {
+        "research_mesh_signer_target": "credential-target:DumbMoney/ResearchMeshSigner",
+        "allocator_signer_target": "credential-target:DumbMoney/ResearchMeshAllocator",
+        "allocator_token_target": "credential-target:DumbMoney/AllocatorToken",
+        "model_gateway_client_token_target": "credential-target:DumbMoney/ModelGatewayClientToken",
+        "research_mesh_runner_config": "path-ref:C:\\ProgramData\\DumbMoney\\config\\research-mesh-runner.v1.json",
+        "research_mesh_runner_config_sha256": "config-ref:DumbMoney/SealedReleaseManifest#installed_artifacts/research-mesh-runner-config/sha256",
+        "core_endpoint": "endpoint-ref:DumbMoneyCore",
+        "core_readiness_descriptor": "readiness-ref:DumbMoneyCore",
+        "readiness_descriptor": "readiness-ref:DumbMoneyResearchMesh"
+      },
+      "network_allowlist": [
+        "loopback:core",
+        "loopback:model-gateway"
+      ],
+      "write_roots": [
+        "%PROGRAMDATA%\\DumbMoney\\research",
+        "%PROGRAMDATA%\\DumbMoney\\spool\\model",
+        "%PROGRAMDATA%\\DumbMoney\\readiness"
+      ],
+      "readiness_descriptor": "%PROGRAMDATA%\\DumbMoney\\readiness\\DumbMoneyResearchMesh.json"
+    },
+    {
+      "name": "DumbMoneyModelGateway",
+      "display_name": "DumbMoney Model Gateway",
+      "role": "openrouter-budget-and-data-classification-gateway",
+      "command_ref": "DUMBMONEY_MODEL_GATEWAY_COMMAND",
+      "dependencies": [
+        "DumbMoneyCore"
+      ],
+      "broker_authority": "NONE",
+      "secret_refs": [
+        "secret-ref:openrouter-api-key",
+        "secret-ref:dumbmoney-model-gateway-ed25519-seed",
+        "secret-ref:dumbmoney-model-gateway-client-token"
+      ],
+      "config_bindings": {
+        "openrouter_credential_target": "credential-target:DumbMoney/OpenRouterApiKey",
+        "gateway_signer_target": "credential-target:DumbMoney/ModelGatewaySigner",
+        "client_bearer_token_target": "credential-target:DumbMoney/ModelGatewayClientToken",
+        "model_gateway_runner_config": "path-ref:C:\\ProgramData\\DumbMoney\\config\\model-gateway-runner.v1.json",
+        "model_gateway_runner_config_sha256": "config-ref:DumbMoney/SealedReleaseManifest#installed_artifacts/model-gateway-runner-config/sha256",
+        "readiness_descriptor": "readiness-ref:DumbMoneyModelGateway"
+      },
+      "network_allowlist": [
+        "loopback",
+        "https://openrouter.ai"
+      ],
+      "write_roots": [
+        "%PROGRAMDATA%\\DumbMoney\\model-gateway",
+        "%PROGRAMDATA%\\DumbMoney\\readiness"
+      ],
+      "readiness_descriptor": "%PROGRAMDATA%\\DumbMoney\\readiness\\DumbMoneyModelGateway.json"
+    },
+    {
+      "name": "DumbMoneyDummyKalshi",
+      "display_name": "DumbMoney Dummy Kalshi Cell",
+      "role": "sovereign-kalshi-venue-cell",
+      "command_ref": "DUMBMONEY_DUMMY_KALSHI_COMMAND",
+      "dependencies": [
+        "DumbMoneyCore"
+      ],
+      "broker_authority": "KALSHI",
+      "secret_refs": [
+        "secret-ref:kalshi-api-key-id",
+        "secret-ref:kalshi-private-key-pem",
+        "secret-ref:dumbmoney-dummy-cell-token",
+        "secret-ref:dumbmoney-dummy-readiness-ed25519"
+      ],
+      "config_bindings": {
+        "core_endpoint": "endpoint-ref:DumbMoneyCore",
+        "core_cell_token_target": "credential-target:DumbMoney/DummyCellToken",
+        "kalshi_key_id_target": "credential-target:DumbMoney/KalshiApiKeyId",
+        "kalshi_private_key_target": "credential-target:DumbMoney/KalshiPrivateKeyPem",
+        "readiness_signing_key_target": "credential-target:DumbMoney/DummyReadinessEd25519",
+        "dummy_kalshi_runner_config": "path-ref:C:\\ProgramData\\DumbMoney\\config\\dummy-kalshi-runner.v1.json",
+        "dummy_kalshi_runner_config_sha256": "config-ref:DumbMoney/SealedReleaseManifest#installed_artifacts/dummy-kalshi-runner-config/sha256",
+        "readiness_descriptor": "readiness-ref:DumbMoneyDummyKalshi"
+      },
+      "network_allowlist": [
+        "loopback:core",
+        "https://external-api.kalshi.com"
+      ],
+      "write_roots": [
+        "%PROGRAMDATA%\\DumbMoney\\dummy-kalshi",
+        "%PROGRAMDATA%\\DumbMoney\\readiness"
+      ],
+      "readiness_descriptor": "%PROGRAMDATA%\\DumbMoney\\readiness\\DumbMoneyDummyKalshi.json"
+    },
+    {
+      "name": "DumbMoneyDopeyRobinhood",
+      "display_name": "DumbMoney Dopey Robinhood Cell",
+      "role": "sovereign-robinhood-venue-cell",
+      "command_ref": "DUMBMONEY_DOPEY_ROBINHOOD_COMMAND",
+      "dependencies": [
+        "DumbMoneyCore"
+      ],
+      "broker_authority": "ROBINHOOD",
+      "secret_refs": [
+        "secret-ref:robinhood-agentic-mcp-profile",
+        "secret-ref:dumbmoney-dopey-cell-token"
+      ],
+      "config_bindings": {
+        "core_endpoint": "endpoint-ref:DumbMoneyCore",
+        "core_cell_token_target": "credential-target:DumbMoney/DopeyCellToken",
+        "robinhood_profile_target": "credential-target:DumbMoney/RobinhoodProfile",
+        "dopey_runner_config": "path-ref:C:\\ProgramData\\DumbMoney\\config\\dopey-robinhood-runner.v1.json",
+        "dopey_runner_config_sha256": "config-ref:DumbMoney/SealedReleaseManifest#installed_artifacts/dopey-robinhood-runner-config/sha256",
+        "dopey_codex_executable": "config-ref:DumbMoney/SealedReleaseManifest#installed_artifacts/dopey-codex-executable/install_path",
+        "dopey_codex_executable_sha256": "config-ref:DumbMoney/SealedReleaseManifest#installed_artifacts/dopey-codex-executable/sha256",
+        "dopey_ollama_executable": "config-ref:DumbMoney/SealedReleaseManifest#installed_artifacts/dopey-ollama-executable/install_path",
+        "dopey_ollama_executable_sha256": "config-ref:DumbMoney/SealedReleaseManifest#installed_artifacts/dopey-ollama-executable/sha256",
+        "dopey_ollama_runtime_evidence": "path-ref:C:\\ProgramData\\DumbMoney\\dopey-robinhood\\evidence\\ollama-runtime-evidence.v1.json",
+        "dopey_ollama_runtime_evidence_sha256": "config-ref:DumbMoney/SealedReleaseManifest#installed_artifacts/dopey-ollama-runtime-evidence/sha256",
+        "readiness_descriptor": "readiness-ref:DumbMoneyDopeyRobinhood"
+      },
+      "network_allowlist": [
+        "loopback:core",
+        "loopback:ollama",
+        "https://agent.robinhood.com"
+      ],
+      "write_roots": [
+        "%PROGRAMDATA%\\DumbMoney\\dopey-robinhood",
+        "%PROGRAMDATA%\\DumbMoney\\readiness"
+      ],
+      "readiness_descriptor": "%PROGRAMDATA%\\DumbMoney\\readiness\\DumbMoneyDopeyRobinhood.json"
+    }
+  ]
+}

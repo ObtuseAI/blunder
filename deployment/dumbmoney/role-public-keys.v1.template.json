@@ -1,0 +1,28 @@
+{
+  "schema": "dumbmoney.role-public-keys.v1",
+  "state": "TEMPLATE",
+  "role_public_keys_base64url": {
+    "operator": [
+      "AQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQE"
+    ],
+    "evaluator": [
+      "AgICAgICAgICAgICAgICAgICAgICAgICAgICAgICAgI"
+    ],
+    "promoter": [
+      "AwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwMDAwM"
+    ],
+    "allocator": [
+      "BAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQEBAQ"
+    ],
+    "research": [
+      "BQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQU"
+    ],
+    "dummy_venue": [
+      "BgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgYGBgY"
+    ],
+    "dopey_venue": [
+      "BwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwcHBwc"
+    ],
+    "migration": []
+  }
+}

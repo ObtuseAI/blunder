@@ -1,0 +1,256 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:dumbmoney:schema:ollama-runtime-evidence:v1",
+  "title": "DumbMoney static local Ollama installation attestation",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "evidence_kind",
+    "state",
+    "evidence_id",
+    "release_id",
+    "verified_at",
+    "verified_by",
+    "verification_status",
+    "process_identity",
+    "process_identity_kind",
+    "process_identity_sid",
+    "windows_service",
+    "credential_targets",
+    "secret_refs",
+    "broker_authority",
+    "remote_model_auth",
+    "executable_path",
+    "executable_sha256",
+    "executable_bytes",
+    "listener_host",
+    "listener_port",
+    "listener_owner_identity",
+    "listener_owner_executable_path",
+    "listener_owner_executable_sha256",
+    "model_provider",
+    "model_tag",
+    "model_digest",
+    "model_store_path",
+    "model_store_owner_identity",
+    "model_store_owner_sid",
+    "model_store_acl_sddl",
+    "model_store_acl_sha256",
+    "model_store_manifest",
+    "model_store_manifest_sha256",
+    "network_allowlist",
+    "external_egress",
+    "use_time_revalidation_required",
+    "use_time_revalidation_fields"
+  ],
+  "properties": {
+    "schema": {
+      "const": "dumbmoney.ollama-runtime-evidence.v1"
+    },
+    "evidence_kind": {
+      "const": "STATIC_INSTALLATION_ATTESTATION"
+    },
+    "state": {
+      "enum": [
+        "TEMPLATE",
+        "VERIFIED"
+      ]
+    },
+    "evidence_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128
+    },
+    "release_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128
+    },
+    "verified_at": {
+      "type": "string"
+    },
+    "verified_by": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256
+    },
+    "verification_status": {
+      "enum": [
+        "TO_BE_RESOLVED",
+        "VERIFIED"
+      ]
+    },
+    "process_identity": {
+      "const": "DumbMoneyOllama"
+    },
+    "process_identity_kind": {
+      "const": "NON_SERVICE_LOCAL_ACCOUNT"
+    },
+    "process_identity_sid": {
+      "anyOf": [
+        {
+          "type": "string",
+          "pattern": "^S-1-[0-9]+(?:-[0-9]+)+$"
+        },
+        {
+          "const": "TO_BE_RESOLVED"
+        }
+      ]
+    },
+    "windows_service": {
+      "const": false
+    },
+    "credential_targets": {
+      "const": []
+    },
+    "secret_refs": {
+      "const": []
+    },
+    "broker_authority": {
+      "const": "NONE"
+    },
+    "remote_model_auth": {
+      "const": "NONE"
+    },
+    "executable_path": {
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 1024
+    },
+    "executable_sha256": {
+      "$ref": "#/$defs/sha256OrTemplate"
+    },
+    "executable_bytes": {
+      "type": "integer",
+      "minimum": 0
+    },
+    "listener_host": {
+      "const": "127.0.0.1"
+    },
+    "listener_port": {
+      "const": 11434
+    },
+    "listener_owner_identity": {
+      "const": "DumbMoneyOllama"
+    },
+    "listener_owner_executable_path": {
+      "type": "string",
+      "minLength": 3,
+      "maxLength": 1024
+    },
+    "listener_owner_executable_sha256": {
+      "$ref": "#/$defs/sha256OrTemplate"
+    },
+    "model_provider": {
+      "const": "ollama"
+    },
+    "model_tag": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 256
+    },
+    "model_digest": {
+      "$ref": "#/$defs/sha256OrTemplate"
+    },
+    "model_store_path": {
+      "const": "C:\\ProgramData\\DumbMoney\\ollama\\models"
+    },
+    "model_store_owner_identity": {
+      "const": "DumbMoneyOllama"
+    },
+    "model_store_owner_sid": {
+      "anyOf": [
+        {
+          "type": "string",
+          "pattern": "^S-1-[0-9]+(?:-[0-9]+)+$"
+        },
+        {
+          "const": "TO_BE_RESOLVED"
+        }
+      ]
+    },
+    "model_store_acl_sddl": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 4096
+    },
+    "model_store_acl_sha256": {
+      "$ref": "#/$defs/sha256OrTemplate"
+    },
+    "model_store_manifest": {
+      "type": "array",
+      "maxItems": 100000,
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "path",
+          "sha256",
+          "bytes"
+        ],
+        "properties": {
+          "path": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 1024
+          },
+          "sha256": {
+            "$ref": "#/$defs/sha256"
+          },
+          "bytes": {
+            "type": "integer",
+            "minimum": 1
+          }
+        }
+      }
+    },
+    "model_store_manifest_sha256": {
+      "$ref": "#/$defs/sha256OrTemplate"
+    },
+    "network_allowlist": {
+      "const": [
+        "loopback:dopey"
+      ]
+    },
+    "external_egress": {
+      "const": false
+    },
+    "use_time_revalidation_required": {
+      "const": true
+    },
+    "use_time_revalidation_fields": {
+      "const": [
+        "process_id",
+        "process_identity",
+        "process_identity_sid",
+        "executable_path",
+        "executable_sha256",
+        "listener_owner_process_id",
+        "listener_owner_identity",
+        "listener_owner_process_identity_sid",
+        "listener_owner_executable_path",
+        "listener_owner_executable_sha256",
+        "model_provider",
+        "model_tag",
+        "model_digest"
+      ]
+    }
+  },
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "sha256OrTemplate": {
+      "anyOf": [
+        {
+          "$ref": "#/$defs/sha256"
+        },
+        {
+          "const": "TO_BE_RESOLVED"
+        }
+      ]
+    }
+  }
+}

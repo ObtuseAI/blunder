@@ -1,0 +1,21 @@
+<!-- PLAN-ONLY TEMPLATE: release validation never starts or authorizes this service. -->
+<service>
+  <id>DumbMoneyDummyKalshi</id>
+  <name>DumbMoney Dummy Kalshi Cell</name>
+  <description>Sovereign Dummy to Kalshi venue cell.</description>
+  <executable>{{DUMBMONEY_DUMMY_KALSHI_EXECUTABLE}}</executable>
+  <arguments>{{DUMBMONEY_DUMMY_KALSHI_ARGUMENTS}}</arguments>
+  <workingdirectory>{{DUMBMONEY_RELEASE_ROOT}}</workingdirectory>
+  <depend>DumbMoneyCore</depend>
+  <stoptimeout>60sec</stoptimeout>
+  <onfailure action="restart" delay="30 sec" />
+  <env name="DUMBMONEY_SERVICE_NAME" value="DumbMoneyDummyKalshi" />
+  <env name="DUMBMONEY_PROGRAM_DATA" value="{{DUMBMONEY_PROGRAM_DATA}}" />
+  <env name="DUMBMONEY_RELEASE_ID" value="{{DUMBMONEY_RELEASE_ID}}" />
+  <env name="DUMBMONEY_TELEMETRY_PUBLICATION" value="disabled" />
+  <env name="DUMBMONEY_START_MODE" value="RECONCILIATION_ONLY" />
+  <log mode="roll-by-size">
+    <sizeThreshold>10485760</sizeThreshold>
+    <keepFiles>20</keepFiles>
+  </log>
+</service>

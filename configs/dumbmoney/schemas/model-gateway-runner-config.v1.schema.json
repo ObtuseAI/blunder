@@ -1,0 +1,239 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:dumbmoney:schema:model-gateway-runner-config:v1",
+  "title": "DumbMoney model-gateway public runner configuration",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "data_root",
+    "readiness_path",
+    "gateway_public_key_path",
+    "fund_lock_path",
+    "service_manifest_path",
+    "bind_port",
+    "release_id",
+    "fund_lock_sha256",
+    "service_manifest_sha256",
+    "gateway_public_key_sha256",
+    "readiness_ttl_seconds",
+    "request_body_max_bytes",
+    "max_active_requests",
+    "client_socket_timeout_seconds",
+    "request_timeout_seconds",
+    "attestation_max_age_seconds",
+    "near_midnight_fence_seconds",
+    "max_prompt_characters",
+    "max_response_bytes",
+    "expected_key_label",
+    "credential_targets",
+    "routes"
+  ],
+  "properties": {
+    "schema": {
+      "const": "dumbmoney.model-gateway-runner-config.v1"
+    },
+    "data_root": {
+      "type": "string",
+      "minLength": 3
+    },
+    "readiness_path": {
+      "type": "string",
+      "minLength": 3
+    },
+    "gateway_public_key_path": {
+      "type": "string",
+      "minLength": 3
+    },
+    "fund_lock_path": {
+      "type": "string",
+      "minLength": 3
+    },
+    "service_manifest_path": {
+      "type": "string",
+      "minLength": 3
+    },
+    "bind_port": {
+      "anyOf": [
+        {
+          "const": 0
+        },
+        {
+          "type": "integer",
+          "minimum": 1024,
+          "maximum": 65535
+        }
+      ]
+    },
+    "release_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128
+    },
+    "fund_lock_sha256": {
+      "$ref": "#/$defs/sha256"
+    },
+    "service_manifest_sha256": {
+      "$ref": "#/$defs/sha256"
+    },
+    "gateway_public_key_sha256": {
+      "$ref": "#/$defs/sha256"
+    },
+    "readiness_ttl_seconds": {
+      "type": "integer",
+      "minimum": 10,
+      "maximum": 120
+    },
+    "request_body_max_bytes": {
+      "type": "integer",
+      "minimum": 1024,
+      "maximum": 2000000
+    },
+    "max_active_requests": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 16
+    },
+    "client_socket_timeout_seconds": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 30
+    },
+    "request_timeout_seconds": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 120
+    },
+    "attestation_max_age_seconds": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 120
+    },
+    "near_midnight_fence_seconds": {
+      "type": "integer",
+      "minimum": 60,
+      "maximum": 3600
+    },
+    "max_prompt_characters": {
+      "type": "integer",
+      "minimum": 1,
+      "maximum": 200000
+    },
+    "max_response_bytes": {
+      "type": "integer",
+      "minimum": 1024,
+      "maximum": 2000000
+    },
+    "expected_key_label": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128
+    },
+    "credential_targets": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "openrouter_api_key",
+        "gateway_signing_seed",
+        "client_bearer_token"
+      ],
+      "properties": {
+        "openrouter_api_key": {
+          "const": "credential-target:DumbMoney/OpenRouterApiKey"
+        },
+        "gateway_signing_seed": {
+          "const": "credential-target:DumbMoney/ModelGatewaySigner"
+        },
+        "client_bearer_token": {
+          "const": "credential-target:DumbMoney/ModelGatewayClientToken"
+        }
+      }
+    },
+    "routes": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "research",
+        "evaluation",
+        "operations"
+      ],
+      "properties": {
+        "research": {
+          "$ref": "#/$defs/route"
+        },
+        "evaluation": {
+          "$ref": "#/$defs/route"
+        },
+        "operations": {
+          "$ref": "#/$defs/route"
+        }
+      }
+    }
+  },
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "route": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "model",
+        "provider",
+        "provider_name",
+        "max_output_tokens",
+        "max_price"
+      ],
+      "properties": {
+        "model": {
+          "type": "string",
+          "minLength": 3,
+          "maxLength": 255
+        },
+        "provider": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 255
+        },
+        "provider_name": {
+          "type": "string",
+          "minLength": 1,
+          "maxLength": 128
+        },
+        "max_output_tokens": {
+          "type": "integer",
+          "minimum": 1,
+          "maximum": 32768
+        },
+        "max_price": {
+          "type": "object",
+          "additionalProperties": false,
+          "minProperties": 1,
+          "properties": {
+            "prompt": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 1000000000
+            },
+            "completion": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 1000000000
+            },
+            "request": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 1000000000
+            },
+            "image": {
+              "type": "integer",
+              "minimum": 0,
+              "maximum": 1000000000
+            }
+          }
+        }
+      }
+    }
+  }
+}

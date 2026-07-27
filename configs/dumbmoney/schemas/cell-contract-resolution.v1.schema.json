@@ -1,0 +1,424 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://obtuse.ai/schemas/dumbmoney/cell-contract-resolution.v1.schema.json",
+  "title": "DumbMoney signed cell contract resolution",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "cell_id",
+    "request_nonce",
+    "requested_body_digest",
+    "capital_envelope_digest",
+    "fencing_generation",
+    "observed_at",
+    "contract_schema",
+    "transport_window_current",
+    "body_window_current",
+    "eligible_live_input",
+    "authority_state",
+    "ledger_proof",
+    "envelope",
+    "checkpoint",
+    "checkpoint_signature"
+  ],
+  "properties": {
+    "schema": {
+      "const": "dumbmoney.cell-contract-resolution.v1"
+    },
+    "cell_id": {
+      "$ref": "#/$defs/cell_id"
+    },
+    "request_nonce": {
+      "$ref": "#/$defs/sha256"
+    },
+    "requested_body_digest": {
+      "$ref": "#/$defs/sha256"
+    },
+    "capital_envelope_digest": {
+      "$ref": "#/$defs/sha256"
+    },
+    "fencing_generation": {
+      "$ref": "#/$defs/positive_sequence"
+    },
+    "observed_at": {
+      "$ref": "#/$defs/utc_timestamp"
+    },
+    "contract_schema": {
+      "$ref": "#/$defs/contract_schema"
+    },
+    "transport_window_current": {
+      "type": "boolean"
+    },
+    "body_window_current": {
+      "type": "boolean"
+    },
+    "eligible_live_input": {
+      "type": "boolean"
+    },
+    "authority_state": {
+      "$ref": "#/$defs/authority_state"
+    },
+    "ledger_proof": {
+      "$ref": "#/$defs/ledger_proof"
+    },
+    "envelope": {
+      "$ref": "https://obtuse.ai/schemas/dumbmoney/signed-envelope.v1.schema.json"
+    },
+    "checkpoint": {
+      "$ref": "#/$defs/checkpoint"
+    },
+    "checkpoint_signature": {
+      "$ref": "#/$defs/checkpoint_signature"
+    }
+  },
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "positive_sequence": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "utc_timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "Z$"
+    },
+    "identifier": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]{0,127}$"
+    },
+    "cell_id": {
+      "enum": [
+        "dummy_kalshi",
+        "dopey_robinhood"
+      ]
+    },
+    "contract_schema": {
+      "enum": [
+        "dumbmoney.alpha_passport.v1",
+        "dumbmoney.promotion-certificate.v1"
+      ]
+    },
+    "ledger_proof": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema",
+        "global_sequence",
+        "event_id",
+        "source_id",
+        "source_sequence",
+        "signer_key_id",
+        "nonce",
+        "event_schema",
+        "observed_at",
+        "received_at",
+        "correlation_id",
+        "causation_id",
+        "payload_digest",
+        "previous_source_digest",
+        "previous_global_digest",
+        "event_digest"
+      ],
+      "properties": {
+        "schema": {
+          "const": "dumbmoney.ledger-event-proof.v1"
+        },
+        "global_sequence": {
+          "$ref": "#/$defs/positive_sequence"
+        },
+        "event_id": {
+          "$ref": "#/$defs/sha256"
+        },
+        "source_id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "source_sequence": {
+          "$ref": "#/$defs/positive_sequence"
+        },
+        "signer_key_id": {
+          "$ref": "#/$defs/sha256"
+        },
+        "nonce": {
+          "$ref": "#/$defs/identifier"
+        },
+        "event_schema": {
+          "$ref": "#/$defs/contract_schema"
+        },
+        "observed_at": {
+          "$ref": "#/$defs/utc_timestamp"
+        },
+        "received_at": {
+          "$ref": "#/$defs/utc_timestamp"
+        },
+        "correlation_id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "causation_id": {
+          "oneOf": [
+            {
+              "$ref": "#/$defs/sha256"
+            },
+            {
+              "type": "null"
+            }
+          ]
+        },
+        "payload_digest": {
+          "$ref": "#/$defs/sha256"
+        },
+        "previous_source_digest": {
+          "$ref": "#/$defs/sha256"
+        },
+        "previous_global_digest": {
+          "$ref": "#/$defs/sha256"
+        },
+        "event_digest": {
+          "$ref": "#/$defs/sha256"
+        }
+      }
+    },
+    "authority_verdict": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "verdict_digest",
+        "verdict_event_digest",
+        "verdict_id",
+        "court",
+        "decision",
+        "signer_key_id",
+        "evaluated_at",
+        "expires_at",
+        "transport_expires_at"
+      ],
+      "properties": {
+        "verdict_digest": {
+          "$ref": "#/$defs/sha256"
+        },
+        "verdict_event_digest": {
+          "$ref": "#/$defs/sha256"
+        },
+        "verdict_id": {
+          "$ref": "#/$defs/identifier"
+        },
+        "court": {
+          "enum": [
+            "integrity",
+            "statistics",
+            "economics",
+            "adversarial_operations"
+          ]
+        },
+        "decision": {
+          "const": "PASS"
+        },
+        "signer_key_id": {
+          "$ref": "#/$defs/sha256"
+        },
+        "evaluated_at": {
+          "$ref": "#/$defs/utc_timestamp"
+        },
+        "expires_at": {
+          "$ref": "#/$defs/utc_timestamp"
+        },
+        "transport_expires_at": {
+          "$ref": "#/$defs/utc_timestamp"
+        }
+      }
+    },
+    "authority_state": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema",
+        "evaluated_at",
+        "authority_valid_until",
+        "policy_epoch",
+        "mandate_id",
+        "mandate_event_digest",
+        "kill_clear",
+        "kill_generation",
+        "kill_event_digest",
+        "desired_mode",
+        "desired_mode_revision",
+        "desired_mode_event_digest",
+        "capital_envelope_digest",
+        "capital_event_digest",
+        "fencing_generation",
+        "strategy_hash",
+        "passport_digest",
+        "passport_event_digest",
+        "promotion_digest",
+        "promotion_event_digest",
+        "verdicts",
+        "ledger_head_sequence",
+        "ledger_head_digest"
+      ],
+      "properties": {
+        "schema": {
+          "const": "dumbmoney.cell-authority-state.v1"
+        },
+        "evaluated_at": {
+          "$ref": "#/$defs/utc_timestamp"
+        },
+        "authority_valid_until": {
+          "$ref": "#/$defs/utc_timestamp"
+        },
+        "policy_epoch": {
+          "$ref": "#/$defs/positive_sequence"
+        },
+        "mandate_id": {
+          "$ref": "#/$defs/sha256"
+        },
+        "mandate_event_digest": {
+          "$ref": "#/$defs/sha256"
+        },
+        "kill_clear": {
+          "const": true
+        },
+        "kill_generation": {
+          "$ref": "#/$defs/positive_sequence"
+        },
+        "kill_event_digest": {
+          "$ref": "#/$defs/sha256"
+        },
+        "desired_mode": {
+          "const": "LIVE"
+        },
+        "desired_mode_revision": {
+          "$ref": "#/$defs/positive_sequence"
+        },
+        "desired_mode_event_digest": {
+          "$ref": "#/$defs/sha256"
+        },
+        "capital_envelope_digest": {
+          "$ref": "#/$defs/sha256"
+        },
+        "capital_event_digest": {
+          "$ref": "#/$defs/sha256"
+        },
+        "fencing_generation": {
+          "$ref": "#/$defs/positive_sequence"
+        },
+        "strategy_hash": {
+          "$ref": "#/$defs/sha256"
+        },
+        "passport_digest": {
+          "$ref": "#/$defs/sha256"
+        },
+        "passport_event_digest": {
+          "$ref": "#/$defs/sha256"
+        },
+        "promotion_digest": {
+          "$ref": "#/$defs/sha256"
+        },
+        "promotion_event_digest": {
+          "$ref": "#/$defs/sha256"
+        },
+        "verdicts": {
+          "type": "array",
+          "minItems": 2,
+          "uniqueItems": true,
+          "items": {
+            "$ref": "#/$defs/authority_verdict"
+          }
+        },
+        "ledger_head_sequence": {
+          "$ref": "#/$defs/positive_sequence"
+        },
+        "ledger_head_digest": {
+          "$ref": "#/$defs/sha256"
+        }
+      }
+    },
+    "checkpoint": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "schema",
+        "cell_id",
+        "request_nonce",
+        "requested_body_digest",
+        "capital_envelope_digest",
+        "fencing_generation",
+        "observed_at",
+        "contract_schema",
+        "transport_window_current",
+        "body_window_current",
+        "eligible_live_input",
+        "authority_state",
+        "ledger_proof",
+        "envelope"
+      ],
+      "properties": {
+        "schema": {
+          "const": "dumbmoney.cell-contract-resolution-checkpoint.v1"
+        },
+        "cell_id": {
+          "$ref": "#/$defs/cell_id"
+        },
+        "request_nonce": {
+          "$ref": "#/$defs/sha256"
+        },
+        "requested_body_digest": {
+          "$ref": "#/$defs/sha256"
+        },
+        "capital_envelope_digest": {
+          "$ref": "#/$defs/sha256"
+        },
+        "fencing_generation": {
+          "$ref": "#/$defs/positive_sequence"
+        },
+        "observed_at": {
+          "$ref": "#/$defs/utc_timestamp"
+        },
+        "contract_schema": {
+          "$ref": "#/$defs/contract_schema"
+        },
+        "transport_window_current": {
+          "type": "boolean"
+        },
+        "body_window_current": {
+          "type": "boolean"
+        },
+        "eligible_live_input": {
+          "type": "boolean"
+        },
+        "authority_state": {
+          "$ref": "#/$defs/authority_state"
+        },
+        "ledger_proof": {
+          "$ref": "#/$defs/ledger_proof"
+        },
+        "envelope": {
+          "$ref": "https://obtuse.ai/schemas/dumbmoney/signed-envelope.v1.schema.json"
+        }
+      }
+    },
+    "checkpoint_signature": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "algorithm",
+        "signer_key_id",
+        "signature"
+      ],
+      "properties": {
+        "algorithm": {
+          "const": "Ed25519"
+        },
+        "signer_key_id": {
+          "$ref": "#/$defs/sha256"
+        },
+        "signature": {
+          "type": "string",
+          "pattern": "^[A-Za-z0-9_-]{86}$"
+        }
+      }
+    }
+  }
+}

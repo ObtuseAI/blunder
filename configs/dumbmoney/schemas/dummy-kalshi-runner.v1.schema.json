@@ -1,0 +1,169 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "urn:dumbmoney:schema:dummy-kalshi-runner:v1",
+  "title": "DumbMoney Dummy Kalshi Windows runner public config",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "service_name",
+    "release_id",
+    "core_endpoint_ref",
+    "core_readiness_path",
+    "core_cell_token_target",
+    "kalshi_key_id_target",
+    "kalshi_private_key_target",
+    "readiness_signing_key_target",
+    "start_mode",
+    "data_root",
+    "readiness_ref",
+    "readiness_path",
+    "core_public_keys_base64url",
+    "operator_public_keys_base64url",
+    "promoter_public_keys_base64url",
+    "research_public_keys_base64url",
+    "evaluator_public_keys_base64url",
+    "expected_account_hash",
+    "kalshi_subaccount_number",
+    "fund_lock_sha256",
+    "service_manifest_sha256",
+    "role_public_keys_sha256",
+    "core_runner_config_sha256",
+    "risk_policy_sha256",
+    "readiness_signer_public_key_sha256",
+    "poll_interval_seconds",
+    "readiness_ttl_seconds",
+    "broker_truth_max_age_seconds"
+  ],
+  "properties": {
+    "schema": {
+      "const": "dummy.dumbmoney-kalshi-runner-config.v1"
+    },
+    "service_name": {
+      "const": "DumbMoneyDummyKalshi"
+    },
+    "release_id": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 128
+    },
+    "core_endpoint_ref": {
+      "const": "endpoint-ref:DumbMoneyCore"
+    },
+    "core_readiness_path": {
+      "const": "C:\\ProgramData\\DumbMoney\\readiness\\DumbMoneyCore.json"
+    },
+    "core_cell_token_target": {
+      "const": "credential-target:DumbMoney/DummyCellToken"
+    },
+    "kalshi_key_id_target": {
+      "const": "credential-target:DumbMoney/KalshiApiKeyId"
+    },
+    "kalshi_private_key_target": {
+      "const": "credential-target:DumbMoney/KalshiPrivateKeyPem"
+    },
+    "readiness_signing_key_target": {
+      "const": "credential-target:DumbMoney/DummyReadinessEd25519"
+    },
+    "start_mode": {
+      "const": "RECONCILIATION_ONLY"
+    },
+    "data_root": {
+      "const": "C:\\ProgramData\\DumbMoney\\dummy-kalshi"
+    },
+    "readiness_ref": {
+      "const": "readiness-ref:DumbMoneyDummyKalshi"
+    },
+    "readiness_path": {
+      "const": "C:\\ProgramData\\DumbMoney\\readiness\\DumbMoneyDummyKalshi.json"
+    },
+    "core_public_keys_base64url": {
+      "$ref": "#/$defs/key_map"
+    },
+    "operator_public_keys_base64url": {
+      "$ref": "#/$defs/key_map"
+    },
+    "promoter_public_keys_base64url": {
+      "$ref": "#/$defs/key_map"
+    },
+    "research_public_keys_base64url": {
+      "$ref": "#/$defs/key_map"
+    },
+    "evaluator_public_keys_base64url": {
+      "$ref": "#/$defs/evaluator_key_map"
+    },
+    "expected_account_hash": {
+      "$ref": "#/$defs/sha256"
+    },
+    "kalshi_subaccount_number": {
+      "type": "integer",
+      "minimum": 0,
+      "maximum": 1000000
+    },
+    "fund_lock_sha256": {
+      "$ref": "#/$defs/sha256"
+    },
+    "service_manifest_sha256": {
+      "$ref": "#/$defs/sha256"
+    },
+    "role_public_keys_sha256": {
+      "$ref": "#/$defs/sha256"
+    },
+    "core_runner_config_sha256": {
+      "$ref": "#/$defs/sha256"
+    },
+    "risk_policy_sha256": {
+      "$ref": "#/$defs/sha256"
+    },
+    "readiness_signer_public_key_sha256": {
+      "$ref": "#/$defs/sha256"
+    },
+    "poll_interval_seconds": {
+      "type": "integer",
+      "minimum": 5,
+      "maximum": 300
+    },
+    "readiness_ttl_seconds": {
+      "type": "integer",
+      "minimum": 10,
+      "maximum": 120
+    },
+    "broker_truth_max_age_seconds": {
+      "type": "integer",
+      "minimum": 5,
+      "maximum": 120
+    }
+  },
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "public_key": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9_-]{43}$"
+    },
+    "key_map": {
+      "type": "object",
+      "minProperties": 1,
+      "maxProperties": 16,
+      "additionalProperties": false,
+      "patternProperties": {
+        "^[0-9a-f]{64}$": {
+          "$ref": "#/$defs/public_key"
+        }
+      }
+    },
+    "evaluator_key_map": {
+      "type": "object",
+      "minProperties": 1,
+      "maxProperties": 32,
+      "additionalProperties": false,
+      "patternProperties": {
+        "^[0-9a-f]{64}$": {
+          "$ref": "#/$defs/public_key"
+        }
+      }
+    }
+  }
+}

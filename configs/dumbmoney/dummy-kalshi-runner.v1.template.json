@@ -1,0 +1,41 @@
+{
+  "schema": "dummy.dumbmoney-kalshi-runner-config.v1",
+  "service_name": "DumbMoneyDummyKalshi",
+  "release_id": "REPLACE_WITH_RELEASE_ID",
+  "core_endpoint_ref": "endpoint-ref:DumbMoneyCore",
+  "core_readiness_path": "C:\\ProgramData\\DumbMoney\\readiness\\DumbMoneyCore.json",
+  "core_cell_token_target": "credential-target:DumbMoney/DummyCellToken",
+  "kalshi_key_id_target": "credential-target:DumbMoney/KalshiApiKeyId",
+  "kalshi_private_key_target": "credential-target:DumbMoney/KalshiPrivateKeyPem",
+  "readiness_signing_key_target": "credential-target:DumbMoney/DummyReadinessEd25519",
+  "start_mode": "RECONCILIATION_ONLY",
+  "data_root": "C:\\ProgramData\\DumbMoney\\dummy-kalshi",
+  "readiness_ref": "readiness-ref:DumbMoneyDummyKalshi",
+  "readiness_path": "C:\\ProgramData\\DumbMoney\\readiness\\DumbMoneyDummyKalshi.json",
+  "core_public_keys_base64url": {
+    "34750f98bd59fcfc946da45aaabe933be154a4b5094e1c4abf42866505f3c97e": "iojj3XQJ8ZX9UtstPLpdcspnCb8dlBIb83SIAbQPb1w"
+  },
+  "operator_public_keys_base64url": {
+    "6a3803d5f059902a1c6dafbc9ba4729212f7caac08634cc3ae76b27529f03827": "gTl3Dqh9F19Wo1Rmw0x-zMuNipG07jeiXfYPW4_Js5Q"
+  },
+  "promoter_public_keys_base64url": {
+    "b62e867fa2f33afe62d5d6b1642e1621d543307846b2a57b897e710919b76709": "7UkoxijRwsbq6QM4kFmVYSlZJzpcY_k2NsFGFKyHN9E"
+  },
+  "research_public_keys_base64url": {
+    "c5b940ed3f65c391965de8295fc5d25f474fa57b48d36eb10ad363b8539c1b79": "ypOsFwUYcHHWe4PH_w7-gQjo7EUwV113JoeTM9vavnw"
+  },
+  "evaluator_public_keys_base64url": {
+    "72456720412037a6b339f884ce6d91bb4cc163a7dc3e4c58c658e6c2097b92a2": "iodf_x6zhFFXes1a_uQFRWVo3XyJ4JCGOgVXvHr0nxc"
+  },
+  "expected_account_hash": "0000000000000000000000000000000000000000000000000000000000000000",
+  "kalshi_subaccount_number": 0,
+  "fund_lock_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+  "service_manifest_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+  "role_public_keys_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+  "core_runner_config_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+  "risk_policy_sha256": "0000000000000000000000000000000000000000000000000000000000000000",
+  "readiness_signer_public_key_sha256": "7599776c3085e3f9da0d13071eb0b4ab50fd2bf64c06dd92c2365af3a328eca3",
+  "poll_interval_seconds": 5,
+  "readiness_ttl_seconds": 30,
+  "broker_truth_max_age_seconds": 30
+}

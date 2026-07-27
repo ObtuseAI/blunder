@@ -1,0 +1,98 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://obtuse.ai/schemas/dumbmoney/signed-envelope.v1.schema.json",
+  "title": "DumbMoney SignedEnvelopeV1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "source_id",
+    "source_sequence",
+    "event_id",
+    "correlation_id",
+    "causation_id",
+    "nonce",
+    "not_before",
+    "expires_at",
+    "body_schema",
+    "body_digest",
+    "body",
+    "signature_algorithm",
+    "signer_key_id",
+    "signature"
+  ],
+  "properties": {
+    "schema": {
+      "const": "dumbmoney.signed-envelope.v1"
+    },
+    "source_id": {
+      "$ref": "#/$defs/identifier"
+    },
+    "source_sequence": {
+      "$ref": "#/$defs/positive_integer"
+    },
+    "event_id": {
+      "$ref": "#/$defs/sha256"
+    },
+    "correlation_id": {
+      "$ref": "#/$defs/identifier"
+    },
+    "causation_id": {
+      "oneOf": [
+        {
+          "$ref": "#/$defs/sha256"
+        },
+        {
+          "type": "null"
+        }
+      ]
+    },
+    "nonce": {
+      "$ref": "#/$defs/identifier"
+    },
+    "not_before": {
+      "$ref": "#/$defs/utc_timestamp"
+    },
+    "expires_at": {
+      "$ref": "#/$defs/utc_timestamp"
+    },
+    "body_schema": {
+      "$ref": "#/$defs/identifier"
+    },
+    "body_digest": {
+      "$ref": "#/$defs/sha256"
+    },
+    "body": {
+      "type": "object"
+    },
+    "signature_algorithm": {
+      "const": "Ed25519"
+    },
+    "signer_key_id": {
+      "$ref": "#/$defs/sha256"
+    },
+    "signature": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9_-]{86}$"
+    }
+  },
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "identifier": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]{0,127}$"
+    },
+    "positive_integer": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "utc_timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "Z$"
+    }
+  }
+}

@@ -42,6 +42,19 @@ The important part is not that a model can write code. The important part is tha
 [Inspect the architecture](#why-this-system-exists) ·
 [Start a technical conversation](https://github.com/ObtuseAI/blunder/issues)
 
+## DumbMoney private-local profile
+
+This private repository also contains **DumbMoney**, a Windows-first personal-prop
+profile that federates Blunder, Doofus, Waterboy, Dummy/Kalshi, and
+Dopey/Robinhood. It adds a signed fund kernel, proof-carrying research loop,
+hard-capped OpenRouter gateway, sovereign venue cells, local release tooling,
+and a read-only operator cockpit without moving broker credentials or execution
+authority into Blunder.
+
+The full design and current activation boundary are in
+[DUMBMONEY_ARCHITECTURE.md](docs/DUMBMONEY_ARCHITECTURE.md). The source does
+not enable live trading, install services, or claim profitability by itself.
+
 ## Blunder in one minute
 
 | Question | Answer |

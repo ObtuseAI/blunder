@@ -9,7 +9,7 @@ description = "Evidence-bound engineering operating system with isolated mission
 readme = "README.md"
 license = {file = "LICENSE"}
 requires-python = ">=3.11"
-dependencies = []
+dependencies = ["cryptography>=42,<50"]
 keywords = ["agentic-ai", "constitutional-ai", "cognitive-operating-system", "developer-tools", "evaluation", "governance"]
 
 [project.optional-dependencies]
@@ -17,7 +17,10 @@ desktop-build = ["pyinstaller>=6,<7"]
 
 [project.scripts]
 blunder-core = "blunder.api.entrypoint:main"
+blunder-fund-core = "blunder.fund.entrypoint:main"
 blunder-promote = "blunder.promotion_cli:main"
+dumbmoney-model-gateway = "blunder.fund.model_gateway_entrypoint:main"
+dumbmoney-research-mesh = "blunder.fund.research_entrypoint:main"
 
 [project.urls]
 Repository = "https://github.com/ObtuseAI/blunder"

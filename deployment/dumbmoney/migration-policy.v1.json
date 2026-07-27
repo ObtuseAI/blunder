@@ -1,0 +1,118 @@
+{
+  "schema_version": "dumbmoney.migration-policy.v1",
+  "policy_id": "dopey-to-dumbmoney-no-secrets-v1",
+  "excluded_path_patterns": [
+    ".env",
+    ".env.*",
+    "*.env",
+    "*.pem",
+    "*.key",
+    "*.p12",
+    "*.pfx",
+    ".git",
+    "**/.git/**",
+    ".ssh",
+    "**/.ssh/**",
+    "credentials",
+    "**/credentials",
+    "**/credentials/**",
+    "**/credentials.*",
+    "cookies",
+    "**/cookies",
+    "**/cookies/**",
+    "**/cookies.*",
+    "oauth",
+    "**/oauth",
+    "**/oauth/**",
+    "**/oauth.*",
+    "secrets",
+    "**/secrets",
+    "**/secrets/**",
+    "**/secrets.*",
+    "**/*token*",
+    "**/*dpapi*",
+    "browser-profile",
+    "**/browser-profile",
+    "**/browser-profile/**",
+    "user-data",
+    "**/user-data",
+    "**/user-data/**"
+  ],
+  "text_suffixes": [
+    ".cfg",
+    ".conf",
+    ".csv",
+    ".ini",
+    ".json",
+    ".jsonl",
+    ".md",
+    ".py",
+    ".toml",
+    ".txt",
+    ".yaml",
+    ".yml"
+  ],
+  "secret_content_patterns": [
+    {
+      "id": "private-key-block",
+      "regex": "-----BEGIN(?: [A-Z0-9]+)? PRIVATE KEY-----"
+    },
+    {
+      "id": "openai-style-key",
+      "regex": "(?i)\\bsk-(?:proj-)?[A-Za-z0-9_-]{20,}\\b"
+    },
+    {
+      "id": "credential-assignment",
+      "regex": "(?i)\\b(?:api[_-]?key|access[_-]?token|refresh[_-]?token|client[_-]?secret|password)\\s*[=:]\\s*[\\\"']?[A-Za-z0-9_./+\\-=]{12,}"
+    },
+    {
+      "id": "bearer-token",
+      "regex": "(?i)\\bbearer\\s+[A-Za-z0-9_./+\\-=]{12,}"
+    },
+    {
+      "id": "session-cookie",
+      "regex": "(?i)\\b(?:sessionid|csrftoken|cookie)\\s*[=:]\\s*[\\\"']?[A-Za-z0-9_./+\\-=]{12,}"
+    }
+  ],
+  "tier_rules": {
+    "tier-1-operational": [
+      "config/*.json",
+      "config/*.toml",
+      "config/*.yaml",
+      "config/*.yml",
+      "config/**/*.json",
+      "config/**/*.toml",
+      "config/**/*.yaml",
+      "config/**/*.yml",
+      "configs/*.json",
+      "configs/*.toml",
+      "configs/*.yaml",
+      "configs/*.yml",
+      "configs/**/*.json",
+      "configs/**/*.toml",
+      "configs/**/*.yaml",
+      "configs/**/*.yml",
+      "state/current*",
+      "runtime/current*",
+      "paper/current*",
+      "evidence/current*",
+      "models/champion*",
+      "calibration/current*"
+    ],
+    "tier-2-recent": [
+      "calibration/**",
+      "evidence/**",
+      "history/**",
+      "models/**",
+      "paper/**",
+      "runtime/**",
+      "*.db",
+      "*.sqlite",
+      "*.sqlite3",
+      "*.parquet"
+    ],
+    "tier-3-cold": [
+      "**"
+    ]
+  }
+}

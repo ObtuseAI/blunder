@@ -1,0 +1,127 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://obtuse.ai/schemas/dumbmoney/promotion-certificate.v1.schema.json",
+  "title": "DumbMoney PromotionCertificateV1",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "certificate_id",
+    "passport_digest",
+    "verdict_digests",
+    "stage",
+    "venue",
+    "instruments",
+    "maximum_loss_cents",
+    "rollback_triggers",
+    "policy_epoch",
+    "not_before",
+    "expires_at"
+  ],
+  "properties": {
+    "schema": {
+      "const": "dumbmoney.promotion-certificate.v1"
+    },
+    "certificate_id": {
+      "$ref": "#/$defs/identifier"
+    },
+    "passport_digest": {
+      "$ref": "#/$defs/sha256"
+    },
+    "verdict_digests": {
+      "$ref": "#/$defs/nonempty_sha256_array"
+    },
+    "stage": {
+      "$ref": "#/$defs/promotion_stage"
+    },
+    "venue": {
+      "$ref": "#/$defs/venue"
+    },
+    "instruments": {
+      "$ref": "#/$defs/exact_instruments"
+    },
+    "maximum_loss_cents": {
+      "$ref": "#/$defs/positive_integer"
+    },
+    "rollback_triggers": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/identifier"
+      }
+    },
+    "policy_epoch": {
+      "$ref": "#/$defs/positive_integer"
+    },
+    "not_before": {
+      "$ref": "#/$defs/utc_timestamp"
+    },
+    "expires_at": {
+      "$ref": "#/$defs/utc_timestamp"
+    }
+  },
+  "$defs": {
+    "sha256": {
+      "type": "string",
+      "pattern": "^[0-9a-f]{64}$"
+    },
+    "identifier": {
+      "type": "string",
+      "pattern": "^[A-Za-z0-9][A-Za-z0-9._:/-]{0,127}$"
+    },
+    "positive_integer": {
+      "type": "integer",
+      "minimum": 1
+    },
+    "utc_timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "pattern": "Z$"
+    },
+    "venue": {
+      "enum": [
+        "dummy_kalshi",
+        "dopey_robinhood"
+      ]
+    },
+    "promotion_stage": {
+      "enum": [
+        "IDEA",
+        "REPLAY",
+        "POINT_IN_TIME_BACKTEST",
+        "FORWARD_SHADOW",
+        "PAPER",
+        "EXPLORATORY_LIVE",
+        "AGGRESSIVE_BOUNDED"
+      ]
+    },
+    "nonempty_sha256_array": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "$ref": "#/$defs/sha256"
+      }
+    },
+    "exact_instruments": {
+      "type": "array",
+      "minItems": 1,
+      "uniqueItems": true,
+      "items": {
+        "type": "string",
+        "oneOf": [
+          {
+            "pattern": "^event_contract:[A-Z0-9][A-Z0-9._-]{0,127}$"
+          },
+          {
+            "pattern": "^equity:[A-Z][A-Z0-9.-]{0,31}$"
+          },
+          {
+            "pattern": "^option:[A-Z][A-Z0-9.-]{0,31}:[A-Za-z0-9][A-Za-z0-9._:/-]{0,127}$"
+          }
+        ]
+      }
+    }
+  }
+}
