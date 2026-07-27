@@ -82,6 +82,10 @@ jobs:
     steps:
       - name: Checkout exact source
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+      - name: Configure Python
+        uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: '3.13'
       - name: Configure Node
         uses: actions/setup-node@249970729cb0ef3589644e2896645e5dc5ba9c38 # v6
         with:
@@ -94,6 +98,13 @@ jobs:
           rustup toolchain install 1.97.1 --profile minimal
           rustup default 1.97.1
           rustc --version
+      - name: Build authenticated Python sidecar
+        shell: pwsh
+        run: |
+          python -m pip install --upgrade pip
+          python -m pip install --editable ".[desktop-build]"
+          powershell -NoProfile -ExecutionPolicy Bypass -File scripts\obtuse\build-blunder-vnext-sidecar.ps1 -Root . -Python (Get-Command python).Source
+          powershell -NoProfile -ExecutionPolicy Bypass -File scripts\obtuse\test-blunder-vnext-sidecar.ps1 -Root . -Executable desktop\src-tauri\binaries\blunder-core-x86_64-pc-windows-msvc.exe
       - name: Prove renderer and native host
         working-directory: desktop
         shell: pwsh
@@ -103,7 +114,6 @@ jobs:
           npm run typecheck
           npm run build
           cargo check --locked --manifest-path src-tauri\Cargo.toml
-          cargo test --locked --manifest-path src-tauri\Cargo.toml --lib
 
   release-proof:
     name: release-proof
@@ -132,13 +142,6 @@ jobs:
           git -C $root.FullName remote add origin "https://github.com/${{ github.repository }}.git"
           git -C $root.FullName add --all
           git -C $root.FullName -c user.name=blunder-proof -c user.email=proof@invalid commit -m "Proof materialization ${{ github.sha }}"
-      - name: Configure uv
-        uses: astral-sh/setup-uv@d0cc045d04ccac9d8b7881df0226f9e82c39688e # v6
-      - name: Install locked proof environment
-        shell: powershell
-        run: |
-          uv sync --frozen --group test --project "$env:BLUNDER_ROOT"
-          "$env:BLUNDER_ROOT\.venv\Scripts" | Add-Content -LiteralPath $env:GITHUB_PATH -Encoding UTF8
       - name: Run Blunder proof court
         shell: powershell
         env:

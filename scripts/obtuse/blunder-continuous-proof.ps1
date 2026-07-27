@@ -93,6 +93,10 @@ try {
     $proofs += Invoke-ProofCommand -Name 'secret-hygiene' -Executable 'python' -Arguments @(
         'security/obtuse_secret_hygiene.py','--root',$resolvedRoot,'--artifact-root',$secretRoot
     )
+    $readinessReport = Join-Path $resolvedOutput 'public-release-readiness.json'
+    $proofs += Invoke-ProofCommand -Name 'public-release-readiness' -Executable 'python' -Arguments @(
+        'security/public_release_readiness.py','--root',$resolvedRoot,'--report',$readinessReport
+    )
     $proofs += Invoke-ProofCommand -Name 'capability-audit-report' -Executable 'powershell.exe' -Arguments @(
         '-NoProfile','-ExecutionPolicy','Bypass','-File','scripts/obtuse/blunder-s-tier-capability-audit.ps1','-Mode','ReportOnly',
         '-ArtifactRoot',(Join-Path $resolvedOutput 'capability-audit')
@@ -125,8 +129,7 @@ try {
         worktreeClean = $worktreeClean
         sourceTreeSha256 = $sourceTreeSha256
         repository = $env:GITHUB_REPOSITORY
-        distribution = 'PRIVATE_LOCAL_ONLY'
-        publicSourcePreview = $false
+        publicSourcePreview = $true
         providerCalls = 0
         secretValuesPrinted = $false
         proofs = $proofs
@@ -141,7 +144,6 @@ try {
             "- Proof subject: $proofSubjectSummary"
             "- Source tree SHA-256: ``$sourceTreeSha256``"
             '- Source proof: PASS'
-            '- Distribution posture: private local repository'
             '- Runtime-dependent capability audit: report-only evidence retained'
             '- Provider calls: 0'
             '- Permission expansion: none'
