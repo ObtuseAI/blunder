@@ -15,6 +15,9 @@ keywords = ["agentic-ai", "constitutional-ai", "cognitive-operating-system", "de
 [project.optional-dependencies]
 desktop-build = ["pyinstaller>=6,<7"]
 
+[dependency-groups]
+test = ["pytest>=8,<10"]
+
 [project.scripts]
 blunder-core = "blunder.api.entrypoint:main"
 blunder-fund-core = "blunder.fund.entrypoint:main"

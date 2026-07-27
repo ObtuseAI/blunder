@@ -132,6 +132,13 @@ jobs:
           git -C $root.FullName remote add origin "https://github.com/${{ github.repository }}.git"
           git -C $root.FullName add --all
           git -C $root.FullName -c user.name=blunder-proof -c user.email=proof@invalid commit -m "Proof materialization ${{ github.sha }}"
+      - name: Configure uv
+        uses: astral-sh/setup-uv@d0cc045d04ccac9d8b7881df0226f9e82c39688e # v6
+      - name: Install locked proof environment
+        shell: powershell
+        run: |
+          uv sync --frozen --group test --project "$env:BLUNDER_ROOT"
+          "$env:BLUNDER_ROOT\.venv\Scripts" | Add-Content -LiteralPath $env:GITHUB_PATH -Encoding UTF8
       - name: Run Blunder proof court
         shell: powershell
         env:
